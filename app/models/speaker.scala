@@ -11,6 +11,7 @@ case class Speaker(id: String, nickname: String, name: String) {
 }
 
 object Speaker {
+
   implicit val format = Json.format[Speaker]
 
   def findById(id: String)(implicit env: Environment): Option[Speaker] = {

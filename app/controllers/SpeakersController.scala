@@ -2,9 +2,10 @@ package controllers
 
 import java.io.{File, FileFilter}
 import java.net.URLEncoder
+import java.util.Base64
 import javax.inject._
 
-import models.{Generators, Speaker}
+import models.Speaker
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -13,34 +14,39 @@ import play.api.mvc._
 class SpeakersController @Inject()()(implicit env: Environment) extends Controller {
 
   lazy val existingIds = {
-    env.getFile("/conf").listFiles(new FileFilter {
+    env.getFile("/conf/speakers").listFiles(new FileFilter {
       override def accept(pathname: File): Boolean = pathname.getName.endsWith(".json")
     }).toSeq.map(f => f.getName.replace(".json", ""))
   }
 
-  def generate(ids: Seq[String]): String = {
-    var id = Generators.token(8)
-    while (ids.contains(id)) {
-      id = Generators.token(8)
-    }
-    id
-  }
-
   def home = Action {
-    val newId = generate(existingIds)
-    val content = Json.obj(
-      "id" -> newId,
-      "nickname" -> "Your-nickname-without-spaces here",
-      "name" -> "Your name here"
-    )
-    val encodedContent = URLEncoder.encode(Json.prettyPrint(content), "UTF-8")
-    val link = s"https://github.com/sebprunier/speakerz/new/master/conf/speakers?filename=$newId.json&value=$encodedContent"
-    Ok(views.html.home(link))
+    Ok(views.html.home())
   }
 
-  def profile(id: String, version: String, name: String) = Action { req =>
+  def createProfileLink(nicknameOpt: Option[String]) = Action {
+    nicknameOpt match {
+      case None => Ok(Json.obj())
+      case Some(nickname) => {
+        val newId = Base64.getEncoder.encodeToString(nickname.getBytes("UTF-8"))
+        if (existingIds.contains(newId)) {
+          Conflict(Json.obj("error" -> "duplicate id"))
+        } else {
+          val content = Json.obj(
+            "id" -> newId,
+            "nickname" -> nickname,
+            "name" -> "Your name here"
+          )
+          val encodedContent = URLEncoder.encode(Json.prettyPrint(content), "UTF-8")
+          val link = s"https://github.com/sebprunier/speakerz/new/master/conf/speakers?filename=$newId.json&value=$encodedContent"
+          Ok(Json.obj("link" -> link, "profile" -> s"/speakers/$newId"))
+        }
+      }
+    }
+  }
+
+  def profile(id: String) = Action { req =>
     Speaker.findById(id) match {
-      case Some(speaker) if speaker.nickname == name => {
+      case Some(speaker) => {
         req.headers.get("Accept") match {
           case Some(accept) => accept.split(",").toSeq.headOption match {
             case Some("text/html") => Ok(views.html.speaker(speaker))
@@ -52,5 +58,4 @@ class SpeakersController @Inject()()(implicit env: Environment) extends Controll
       case _ => NotFound("Speaker not found")
     }
   }
-
 }
