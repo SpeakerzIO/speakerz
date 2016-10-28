@@ -1,5 +1,14 @@
 {
   "id": "dHJldm9ycmV6bmlr",
   "nickname": "trevorreznik",
-  "name": "Mathieu Ancelin"
+  "name": "Mathieu Ancelin",
+  "resume" : {
+    "en" : "Your resume here",
+    "fr" : "Votre bio ici",
+    "anotherLang" : "..."
+  },
+  "avatar" : "http://www.gravatar.com/avatar/79dc5d13bab6d382ae346ecbb0b9876a",
+  "website" : "http://reactivecouchbase.org/",
+  "twitterHandle" : "@trevorreznik",
+  "githubHandle" : "mathieuancelin"
 }

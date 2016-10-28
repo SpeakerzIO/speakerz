@@ -5,13 +5,35 @@ import akka.stream.scaladsl.StreamConverters
 import akka.util.ByteString
 import com.google.common.io.Files
 import play.api.Environment
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Success, Try}
 
-case class Speaker(id: String, nickname: String, name: String) {
+case class Speaker(
+                    id: String,
+                    nickname: String,
+                    name: String,
+                    resume: Option[JsObject],
+                    avatar: Option[String],
+                    website: Option[String],
+                    twitterHandle: Option[String],
+                    githubHandle: Option[String]
+                  ) {
+
   def toJson = Speaker.format.writes(this)
+
+  def resume(lang: String): String = {
+    resume match {
+      case None => "--"
+      case Some(r) => {
+        (r \ lang).asOpt[String]
+          .orElse((r \ "fr").asOpt[String])
+          .orElse((r \ "en").asOpt[String])
+          .getOrElse("--")
+      }
+    }
+  }
 }
 
 object Speaker {

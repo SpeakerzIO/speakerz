@@ -36,7 +36,20 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
         if (existingIds.contains(newId)) {
           Conflict(Json.obj("error" -> "duplicate id"))
         } else {
-          val content = Speaker(id = newId, nickname = nickname, name = "Your name here").toJson
+          val content = Speaker(
+            id = newId,
+            nickname = nickname,
+            name = "Your name here",
+            resume = Some(Json.obj(
+              "en" -> "Your resume here",
+              "fr" -> "Votre bio ici",
+              "anotherLang" -> "..."
+            )),
+            avatar = Some("Your avatar URL here"),
+            website = Some("Your website URL here"),
+            twitterHandle = Some(s"@$nickname"),
+            githubHandle = Some(nickname)
+          ).toJson
           val message = URLEncoder.encode(s"Adding @$nickname to speakerz.io", "UTF-8")
           val description = URLEncoder.encode(s"Adding @$nickname to speakerz.io from @me at ${DateTime.now().toString("dd/MM/yyyy HH:mm:ss")}", "UTF-8")
           val encodedContent = URLEncoder.encode(Json.prettyPrint(content), "UTF-8")
