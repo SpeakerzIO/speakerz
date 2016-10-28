@@ -7,6 +7,7 @@ import javax.inject._
 
 import akka.stream.Materializer
 import models.Speaker
+import org.joda.time.DateTime
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -28,19 +29,19 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
 
   def createProfileLink(nicknameOpt: Option[String]) = Action {
     nicknameOpt match {
-      case None => Ok(Json.obj())
+      case None => BadRequest(Json.obj("error" -> "no nickname provided"))
       case Some(nickname) => {
-        val newId = Base64.getEncoder.encodeToString(nickname.getBytes("UTF-8"))
+        val encoder = Base64.getEncoder
+        val newId = encoder.encodeToString(nickname.getBytes("UTF-8"))
         if (existingIds.contains(newId)) {
           Conflict(Json.obj("error" -> "duplicate id"))
         } else {
-          val content = Json.obj(
-            "id" -> newId,
-            "nickname" -> nickname,
-            "name" -> "Your name here"
-          )
+          val content = Speaker(id = newId, nickname = nickname, name = "Your name here").toJson
+          val message = URLEncoder.encode(s"Adding @$nickname to speakerz.io", "UTF-8")
+          val description = URLEncoder.encode(s"Adding @$nickname to speakerz.io from @me at ${DateTime.now().toString("dd/MM/yyyy HH:mm:ss")}", "UTF-8")
           val encodedContent = URLEncoder.encode(Json.prettyPrint(content), "UTF-8")
-          val link = s"https://github.com/sebprunier/speakerz/new/master/conf/speakers?filename=$newId.json&value=$encodedContent"
+          val pr = URLEncoder.encode("quick-pull", "UTF-8")
+          val link = s"https://github.com/sebprunier/speakerz/new/master/conf/speakers?filename=$newId.json&message=$message&description=$description&commit-choice=$pr&value=$encodedContent"
           Ok(Json.obj("link" -> link, "profile" -> s"/speakers/$newId"))
         }
       }
