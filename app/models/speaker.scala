@@ -15,8 +15,8 @@ case class Speaker(
                     nickname: String,
                     name: String,
                     resume: Option[JsObject],
-                    avatar: Option[String],
-                    website: Option[String],
+                    avatarUrl: Option[String],
+                    websiteUrl: Option[String],
                     twitterHandle: Option[String],
                     githubHandle: Option[String]
                   ) {

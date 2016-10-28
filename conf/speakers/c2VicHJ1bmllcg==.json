@@ -7,8 +7,8 @@
     "fr": "Votre bio ici",
     "anotherLang": "..."
   },
-  "avatar": "http://www.gravatar.com/avatar/9ec96799dd90029b4f1caf6d1475c1bb",
-  "website": "",
+  "avatarUrl": "http://www.gravatar.com/avatar/9ec96799dd90029b4f1caf6d1475c1bb",
+  "websiteUrl": "",
   "twitterHandle": "@sebprunier",
   "githubHandle": "sebprunier"
 }

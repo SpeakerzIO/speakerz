@@ -8,7 +8,7 @@ import javax.inject._
 import akka.stream.Materializer
 import models.Speaker
 import org.joda.time.DateTime
-import play.api.Environment
+import play.api.{Environment, Logger}
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -45,8 +45,8 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
               "fr" -> "Votre bio ici",
               "anotherLang" -> "..."
             )),
-            avatar = Some("Your avatar URL here"),
-            website = Some("Your website URL here"),
+            avatarUrl = Some("Your avatar URL here"),
+            websiteUrl = Some("Your website URL here"),
             twitterHandle = Some(s"@$nickname"),
             githubHandle = Some(nickname)
           ).toJson
@@ -62,11 +62,14 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
   }
 
   def profile(id: String) = Action.async { req =>
+    val lang = req.headers.get("Accept-Language") flatMap { h =>
+      h.split(",").toSeq.map(l => l.split(";").toSeq.headOption).headOption.flatten.flatMap(i => i.split("-").toSeq.headOption)
+    } getOrElse "en"
     Speaker.findById(id).map {
       case Some(speaker) => {
         req.headers.get("Accept") match {
           case Some(accept) => accept.split(",").toSeq.headOption match {
-            case Some("text/html") => Ok(views.html.speaker(speaker))
+            case Some("text/html") => Ok(views.html.speaker(speaker, lang))
             case e => Ok(speaker.toJson)
           }
           case None => Ok(speaker.toJson)

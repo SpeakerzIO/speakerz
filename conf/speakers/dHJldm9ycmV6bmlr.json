@@ -7,8 +7,8 @@
     "fr" : "Votre bio ici",
     "anotherLang" : "..."
   },
-  "avatar" : "http://www.gravatar.com/avatar/79dc5d13bab6d382ae346ecbb0b9876a",
-  "website" : "http://reactivecouchbase.org/",
+  "avatarUrl" : "http://www.gravatar.com/avatar/79dc5d13bab6d382ae346ecbb0b9876a",
+  "websiteUrl" : "http://reactivecouchbase.org/",
   "twitterHandle" : "@trevorreznik",
   "githubHandle" : "mathieuancelin"
 }
