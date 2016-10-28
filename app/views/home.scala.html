@@ -1,16 +1,46 @@
 @()
 
-@main("Speakerz") {
-    <nav class="light-blue lighten-1" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="#">Navbar Link</a></li>
-            </ul>
+@moreScripts = {
+    <script>
+        $(function() {
+            var openPR = false;
+            $('#profile_container').hide();
+            $('#input_nickname').keyup(function(e) {
+                var value = $(this).val();
+                $.get('/speakers?nickname=' + value).then(function(data) {
+                    if (data.link) {
+                        // $('#label').removeAttr('error').data('success', 'right');
+                        $('#create_button').attr('href', data.link).removeClass('grey').addClass('green').html('Create your profile');
+                        $('#profile').attr('href', data.profile).html('https://speakerz.io' + data.profile);
+                        $('#profile_container').show();
+                        openPR = true;
+                    } else {
+                        // $('#label').data('error', 'wrong').removeAttr('success');
+                        $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('You should try an actual nickname');
+                        $('#profile').attr('href', '#').html('');
+                        $('#profile_container').hide();
+                        openPR = false;
+                    }
+                }, function() {
+                    // $('#label').data('error', 'wrong').removeAttr('success');
+                    $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('Sorry, duplicates nickname');
+                    $('#profile').attr('href', '#').html('');
+                    $('#profile_container').hide();
+                    openPR = false;
+                });
+            });
+            $('#create_button').click(function(e) {
+               if (!openPR) {
+                   e.preventDefault();
+               }
+            });
+        });
+    </script>
+}
 
-            <ul id="nav-mobile" class="side-nav" style="transform: translateX(-100%);">
-                <li><a href="#">Navbar Link</a></li>
-            </ul>
-            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+@main("Speakerz", moreScripts) {
+    <nav class="light-blue lighten-1" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Speakerz</a>
         </div>
     </nav>
     <div class="section no-pad-bot" id="index-banner">
@@ -21,10 +51,16 @@
                 <h5 class="header col s12 light">Sharable Speaker profiles with an API</h5>
             </div>
             <div class="row center">
-                <input type="text" class="validate" id="input_nickname" placeholder="Nickname"/>
-                <a href="#" id="create_button" target="_blank" class="btn-large waves-effect waves-light grey">Create your profile</a>
-                <br/>
-                Your future profile <a href="#" id="profile" target="_blank"></a>
+                <div class="row col s6 offset-s3">
+                    <input type="text" class="validate" id="input_nickname" placeholder="Your nickname goes here"/>
+                    <br/>
+                </div>
+                <div class="row col s6 offset-s3">
+                    <a href="#" id="create_button" target="_blank" class="btn-large waves-effect waves-light grey">Create your profile</a>
+                </div>
+                <div id="profile_container" class="row col s6 offset-s3">
+                    Your future profile will be available at <a href="#" id="profile" target="_blank"></a>
+                </div>
             </div>
             <br><br>
         </div>
@@ -36,7 +72,6 @@
                     <div class="icon-block">
                         <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
                         <h5 class="center">Speeds up development</h5>
-
                         <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
                     </div>
                 </div>
@@ -45,7 +80,6 @@
                     <div class="icon-block">
                         <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
                         <h5 class="center">User Experience Focused</h5>
-
                         <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
                     </div>
                 </div>
@@ -54,7 +88,6 @@
                     <div class="icon-block">
                         <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
                         <h5 class="center">Easy to work with</h5>
-
                         <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
                     </div>
                 </div>
@@ -66,57 +99,10 @@
     </div>
 
     <footer class="page-footer orange">
-        <div class="container">
-            <div class="row">
-                <div class="col l6 s12">
-                    <h5 class="white-text">Company Bio</h5>
-                    <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-                </div>
-                <div class="col l3 s12">
-                    <h5 class="white-text">Settings</h5>
-                    <ul>
-                        <li><a class="white-text" href="#!">Link 1</a></li>
-                        <li><a class="white-text" href="#!">Link 2</a></li>
-                        <li><a class="white-text" href="#!">Link 3</a></li>
-                        <li><a class="white-text" href="#!">Link 4</a></li>
-                    </ul>
-                </div>
-                <div class="col l3 s12">
-                    <h5 class="white-text">Connect</h5>
-                    <ul>
-                        <li><a class="white-text" href="#!">Link 1</a></li>
-                        <li><a class="white-text" href="#!">Link 2</a></li>
-                        <li><a class="white-text" href="#!">Link 3</a></li>
-                        <li><a class="white-text" href="#!">Link 4</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
         <div class="footer-copyright">
             <div class="container">
+                <span>Proudly hosted on <a target="_blank" href="https://www.clever-cloud.com/">Clever Cloud</a></span>
             </div>
         </div>
     </footer>
-    <script>
-        $(function() {
-           $('#input_nickname').keyup(function(e) {
-               var value = $(this).val();
-               $.get('/speakers?nickname=' + value).then(function(data) {
-                  if (data.link) {
-                      // $('#label').removeAttr('error').data('success', 'right');
-                      $('#create_button').attr('href', data.link).removeClass('grey').addClass('green');
-                      $('#profile').attr('href', data.profile).html('https://speakerz.io' + data.profile)
-                  } else {
-                      // $('#label').data('error', 'wrong').removeAttr('success');
-                      $('#create_button').attr('href', '#').removeClass('green').addClass('grey');
-                      $('#profile').attr('href', '#').html('')
-                  }
-               }, function() {
-                   // $('#label').data('error', 'wrong').removeAttr('success');
-                   $('#create_button').attr('href', '#').removeClass('green').addClass('grey');
-                   $('#profile').attr('href', '#').html('')
-               });
-           });
-        });
-    </script>
 }

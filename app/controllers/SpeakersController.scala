@@ -5,13 +5,16 @@ import java.net.URLEncoder
 import java.util.Base64
 import javax.inject._
 
+import akka.stream.Materializer
 import models.Speaker
 import play.api.Environment
 import play.api.libs.json.Json
 import play.api.mvc._
 
+import scala.concurrent.ExecutionContext
+
 @Singleton
-class SpeakersController @Inject()()(implicit env: Environment) extends Controller {
+class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionContext, materializer: Materializer) extends Controller {
 
   lazy val existingIds = {
     env.getFile("/conf/speakers").listFiles(new FileFilter {
@@ -44,8 +47,8 @@ class SpeakersController @Inject()()(implicit env: Environment) extends Controll
     }
   }
 
-  def profile(id: String) = Action { req =>
-    Speaker.findById(id) match {
+  def profile(id: String) = Action.async { req =>
+    Speaker.findById(id).map {
       case Some(speaker) => {
         req.headers.get("Accept") match {
           case Some(accept) => accept.split(",").toSeq.headOption match {
