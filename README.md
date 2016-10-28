@@ -13,3 +13,4 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] create a nice HTML speaker card
 - [ ] manage DNS config for speakerz.io domain
 - [ ] create JS widget
+- [ ] HTTPS only
