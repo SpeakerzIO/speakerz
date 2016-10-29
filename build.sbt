@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
+  "org.pegdown" % "pegdown" % "1.6.0",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 

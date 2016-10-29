@@ -4,7 +4,7 @@
   "name": "Sébastien Prunier",
   "resume": {
     "en": "Your resume here",
-    "fr": "Votre bio ici",
+    "fr": "Votre bio ici. Avec le support de [Markdown](https://daringfireball.net/projects/markdown/syntax) ! Un peu de **gras** :-)",
     "anotherLang": "..."
   },
   "avatarUrl": "http://www.gravatar.com/avatar/9ec96799dd90029b4f1caf6d1475c1bb",

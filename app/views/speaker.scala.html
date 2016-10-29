@@ -9,7 +9,7 @@
                 <br />
                 <img src="@speaker.avatarUrl" />
                 <p>My name is @speaker.name</p>
-                <p>@speaker.resume(lang)</p>
+                @Html(speaker.resumeToHtml(lang))
             </div>
         </div>
     </div>
