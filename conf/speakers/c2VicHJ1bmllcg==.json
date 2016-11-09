@@ -3,12 +3,76 @@
   "nickname": "sebprunier",
   "name": "Sébastien Prunier",
   "resume": {
-    "en": "Your resume here",
-    "fr": "Votre bio ici. Avec le support de [Markdown](https://daringfireball.net/projects/markdown/syntax) ! Un peu de **gras** :-)",
-    "anotherLang": "..."
+    "en": "I'm a Coder at Serli in France. I love to code in Java, Scala and Javascript. Technologies I use everyday : Play2, React, Elasticsearch, Mongo, Docker, Auth0 and Prismic. I'm a big fan of conferences for developers (Devoxx, JUGs, Web2Day, BreizhCamp, JugSummerCamp...) !",
+    "fr": "Sébastien travaille chez SERLI à Nantes et est actuellement Lead Developer du projet [SoUse](www.souse.fr), l'agrégateur de services de l'économie collaborative. Les technos qu'il utilise en ce moment : Play2, Scala, React, Elastic, Mongo, Docker, Prismic, Auth0. Vous pouvez le croiser dans différentes conférences : JUGs, Devoxx, BreizhCamp, Dev Fest, JugSummerCamp et plus récemment le Web2Day. Il est également à l'initiative du projet [DevConferences](http://www.devconferences.org) "
   },
   "avatarUrl": "http://www.gravatar.com/avatar/9ec96799dd90029b4f1caf6d1475c1bb",
-  "websiteUrl": "",
+  "websiteUrl": "http://blog.sebprunier.com",
   "twitterHandle": "@sebprunier",
-  "githubHandle": "sebprunier"
+  "githubHandle": "sebprunier",
+  "talks": [
+    {
+      "id": "let-s-react-the-workshop",
+      "name": {
+        "en": "Let's React, the workshop",
+        "fr": "Let's React, le lab !"
+      },
+      "abstract": {
+        "en": "You love glory? You want to become rich and famous?\nSorry, but we can't help you ...\nHowever, if you like JavaScript and want to try out React, then come to our workshop dedicated to learn this great Javascript library.\nWe will explore together how to handle React and its ecosystem, how to start a project, how to fetch all your project dependencies with NPM, how to configure your Webpack build to work with Babel, how to test your components and check your code quality, etc ...\nAt the end of this lab, you will have created a wonderful application written entirely with ES2015, which will use redux and react-router (among others). And if you're very fast, maybe you will be able to explore the creation of native mobile application using React Native. And all this with a simple text editor and a browser (and nodejs ;-)\nSo, do not hesitate a moment and come react with us :-)",
+        "fr": "Tu aimes la gloire ? Tu veux devenir riche et célèbre ? Désolé, mais on ne peut rien pour toi ... En revanche, si tu aimes le JavaScript et que tu veux essayer React, alors viens a notre lab consacré à cette librairie géniale. Nous verrons ensemble comment prendre en main React et son écosystème, comment démarrer un projet, comment récupérer ses dépendances avec NPM, comment configurer son build Webpack pour fonctionner avec Babel, comment faire du test de composants graphiques et de la qualité de code. A la fin de ce lab, tu auras créé une merveilleuse application entièrement écrite avec ES2015, qui utilisera Redux et React-router (entre autres). Et si tu es rapide nous pourront peut-être explorer la création d'application mobile native en utilisant React Native. Et tout ça avec un simple éditeur de texte et un navigateur (et Node ;-) Alors n'hésites pas un instant et vient nous voir :-)"
+      },
+      "sessions": [
+        {
+          "name": "Devoxx",
+          "date": "2016-11-09",
+          "place": {
+            "name": "Antwerp",
+            "location": {
+              "lat": 51.2192,
+              "lon": 4.4029
+            }
+          },
+          "links": [
+            "http://cfp.devoxx.be/2016/talk/LJP-3156/Let's_React:_the_workshop"
+          ]
+        },
+        {
+          "name": "bdx.io",
+          "date": "2016-10-21",
+          "links": [
+            "http://www.bdx.io/#/program",
+            "http://www.serli.com/blog/article/57f51a03d20700d207e1fb16#.WCMJpRLhAmI"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "golden-master-testing",
+      "name": {
+        "fr": "Refactoring avec 1,22% de code couvert par les tests ... Golden Master testing à la rescousse !"
+      },
+      "abstract": {
+        "fr": "Plus de 10000 lignes de code à refactorer, très peu de tests unitaires, seulement 1,22% de code couvert par les tests.\nVoilà le petit challenge auquel j'ai été récemment confronté !\nPetit retour d'expérience sur la technique utilisée pour sereinement venir à bout de ce refactoring."
+      },
+      "sessions": [
+        {
+          "name": "Breizhcamp",
+          "date": "2015-06-12",
+          "links": [
+            "http://2015.breizhcamp.org/#programme",
+            "https://www.youtube.com/watch?v=QFtr0yRpvPk&index=7&list=PLHWl6dPnEb4kHfPp5D8CiGNfA64HQs_Hb",
+            "http://fr.slideshare.net/sebprunier/golden-master-testing"
+          ]
+        },
+        {
+          "name": "Human Talks Nantes",
+          "date": "2014-12-09",
+          "links": [
+            "http://humantalks.com/talks/549-refactoring-avec-1-22-de-code-couvert-par-les-test",
+            "http://fr.slideshare.net/sebprunier/golden-mastertesting"
+          ]
+        }
+      ]
+    }
+  ]
 }

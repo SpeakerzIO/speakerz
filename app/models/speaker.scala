@@ -19,7 +19,8 @@ case class Speaker(
                     avatarUrl: Option[String],
                     websiteUrl: Option[String],
                     twitterHandle: Option[String],
-                    githubHandle: Option[String]
+                    githubHandle: Option[String],
+                    talks: Seq[Talk]
                   ) {
 
   def toJson = Speaker.format.writes(this)
@@ -29,8 +30,8 @@ case class Speaker(
       case None => "--"
       case Some(r) => {
         (r \ lang).asOpt[String]
-          .orElse((r \ "fr").asOpt[String])
           .orElse((r \ "en").asOpt[String])
+          .orElse((r \ "fr").asOpt[String])
           .getOrElse("--")
       }
     }

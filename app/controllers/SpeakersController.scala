@@ -48,7 +48,8 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
             avatarUrl = Some("Your avatar URL here"),
             websiteUrl = Some("Your website URL here"),
             twitterHandle = Some(s"@$nickname"),
-            githubHandle = Some(nickname)
+            githubHandle = Some(nickname),
+            talks = Seq()
           ).toJson
           val message = URLEncoder.encode(s"Adding @$nickname to speakerz.io", "UTF-8")
           val description = URLEncoder.encode(s"Adding @$nickname to speakerz.io from @me at ${DateTime.now().toString("dd/MM/yyyy HH:mm:ss")}", "UTF-8")
