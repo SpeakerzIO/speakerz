@@ -1,0 +1,12 @@
+a.anchor {
+    float: left;
+    padding-right: 4px;
+    margin-left: -36px;
+    font-size: 2.28rem;
+    color: lightgray;
+    visibility: hidden;
+}
+
+h3:hover a.anchor {
+    visibility: visible;
+}

@@ -20,4 +20,5 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] store profiles into PostgreSQL
 - [ ] enable authentication with Auth0
 - [ ] manage Accept-Language in API
-- [ ] vizualize talks on a map
+- [x] ~~vizualize talks on a map~~
+- [x] add anchors for talks

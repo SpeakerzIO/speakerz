@@ -33,7 +33,12 @@
         </div>
         <h2>Talks</h2>
         @for(talk <- speaker.talks) {
-            <h3>@talk.name(lang)</h3>
+            <h3>
+                <a name="@talk.id" class="anchor" href="#@talk.id">
+                    <i class="fa fa-link" aria-hidden="true"></i>
+                </a>
+                @talk.name(lang)
+            </h3>
             <p>@Html(markdownToHtml(talk.`abstract`(lang)))</p>
             <h4>Sessions</h4>
             @for(session <- talk.sessions) {
