@@ -22,3 +22,4 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] manage Accept-Language in API
 - [x] ~~vizualize talks on a map~~
 - [x] add anchors for talks
+- [ ] enable talk archiving
