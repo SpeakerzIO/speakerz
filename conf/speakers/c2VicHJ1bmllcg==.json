@@ -39,6 +39,9 @@
         {
           "name": "bdx.io",
           "date": "2016-10-21",
+          "place": {
+            "name": "Bordeaux"
+          },
           "links": [
             "http://www.bdx.io/#/program",
             "http://www.serli.com/blog/article/57f51a03d20700d207e1fb16#.WCMJpRLhAmI"
@@ -58,6 +61,9 @@
         {
           "name": "Breizhcamp",
           "date": "2015-06-12",
+          "place": {
+            "name": "Rennes"
+          },
           "links": [
             "http://2015.breizhcamp.org/#programme",
             "https://www.youtube.com/watch?v=QFtr0yRpvPk&index=7&list=PLHWl6dPnEb4kHfPp5D8CiGNfA64HQs_Hb",
@@ -67,6 +73,13 @@
         {
           "name": "Human Talks Nantes",
           "date": "2014-12-09",
+          "place": {
+            "name": "Nantes",
+            "location": {
+              "lat": 47.21725,
+              "lon": -1.55336
+            }
+          },
           "links": [
             "http://humantalks.com/talks/549-refactoring-avec-1-22-de-code-couvert-par-les-test",
             "http://fr.slideshare.net/sebprunier/golden-mastertesting"

@@ -44,9 +44,19 @@
                     </div>
                 }
                 @for(place <- session.place) {
-                    <div>
-                        <i class="fa fa-map-marker" aria-hidden="true"></i> @place.name
-                    </div>
+                    @place.location match {
+                        case None => {
+                            <div>
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> @place.name
+                            </div>
+                        }
+                        case Some(location) => {
+                            <div>
+                                <i class="fa fa-map-marker" aria-hidden="true"></i> <a href="https://www.google.fr/maps/@@@location.lat,@location.lon,15z">@place.name</a>
+                            </div>
+                        }
+                    }
+
                 }
                 <ul>
                 @for(link <- session.links) {
