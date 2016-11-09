@@ -22,7 +22,7 @@ object Place {
 
 case class Session(
                   name: String,
-                  date: String,
+                  date: Option[String],
                   place: Option[Place],
                   links: Seq[String]
                   )

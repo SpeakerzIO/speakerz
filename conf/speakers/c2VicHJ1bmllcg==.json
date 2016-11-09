@@ -4,9 +4,9 @@
   "name": "Sébastien Prunier",
   "resume": {
     "en": "I'm a Coder at Serli in France. I love to code in Java, Scala and Javascript. Technologies I use everyday : Play2, React, Elasticsearch, Mongo, Docker, Auth0 and Prismic. I'm a big fan of conferences for developers (Devoxx, JUGs, Web2Day, BreizhCamp, JugSummerCamp...) !",
-    "fr": "Sébastien travaille chez SERLI à Nantes et est actuellement Lead Developer du projet [SoUse](www.souse.fr), l'agrégateur de services de l'économie collaborative. Les technos qu'il utilise en ce moment : Play2, Scala, React, Elastic, Mongo, Docker, Prismic, Auth0. Vous pouvez le croiser dans différentes conférences : JUGs, Devoxx, BreizhCamp, Dev Fest, JugSummerCamp et plus récemment le Web2Day. Il est également à l'initiative du projet [DevConferences](http://www.devconferences.org) "
+    "fr": "Sébastien travaille chez SERLI à Nantes et est actuellement Lead Developer du projet [SoUse](www.souse.fr), l'agrégateur de services de l'économie collaborative.\n\nLes technos qu'il utilise en ce moment : Play2, Scala, React, Elastic, Mongo, Docker, Prismic, Auth0.\n\nVous pouvez le croiser dans différentes conférences : JUGs, Devoxx, BreizhCamp, Dev Fest, JugSummerCamp et plus récemment le Web2Day.\n\nIl est également à l'initiative du projet [DevConferences](http://www.devconferences.org) "
   },
-  "avatarUrl": "http://www.gravatar.com/avatar/9ec96799dd90029b4f1caf6d1475c1bb",
+  "avatarUrl": "https://pbs.twimg.com/profile_images/789957725514006528/ffU0IJUJ.jpg",
   "websiteUrl": "http://blog.sebprunier.com",
   "twitterHandle": "@sebprunier",
   "githubHandle": "sebprunier",
