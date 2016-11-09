@@ -1,5 +1,7 @@
 @(speaker: models.Speaker, lang: String)
 
+@import utils.Markdown._
+
 @main("Speaker") {
 
     <div class="container">
@@ -9,7 +11,7 @@
                 <br />
                 <img src="@speaker.avatarUrl" />
                 <p>My name is @speaker.name</p>
-                @Html(speaker.resumeToHtml(lang))
+                @Html(markdownToHtml(speaker.resume(lang)))
             </div>
         </div>
     </div>

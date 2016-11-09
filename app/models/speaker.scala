@@ -4,7 +4,6 @@ import akka.stream.Materializer
 import akka.stream.scaladsl.StreamConverters
 import akka.util.ByteString
 import com.google.common.io.Files
-import org.pegdown.PegDownProcessor
 import play.api.Environment
 import play.api.libs.json.{JsObject, Json}
 
@@ -35,10 +34,6 @@ case class Speaker(
           .getOrElse("--")
       }
     }
-  }
-
-  def resumeToHtml(lang: String): String = {
-    new PegDownProcessor().markdownToHtml(resume(lang))
   }
 }
 
