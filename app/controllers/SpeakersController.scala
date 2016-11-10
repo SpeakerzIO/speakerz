@@ -3,22 +3,21 @@ package controllers
 import java.io.{File, FileFilter}
 import java.net.URLEncoder
 import java.util.Base64
-import javax.inject._
 
-import akka.stream.Materializer
 import models.Speaker
+import old.play.GoodOldPlayframework
 import org.joda.time.DateTime
-import play.api.{Environment, Logger}
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
+object SpeakersController extends Controller with GoodOldPlayframework {
 
-@Singleton
-class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionContext, materializer: Materializer) extends Controller {
+  implicit val ec = httpRequestsContext
+  implicit val env = Environment
+  implicit val mat = defaultMaterializer
 
   lazy val existingIds = {
-    env.getFile("/conf/speakers").listFiles(new FileFilter {
+    Environment.getFile("/conf/speakers").listFiles(new FileFilter {
       override def accept(pathname: File): Boolean = pathname.getName.endsWith(".json")
     }).toSeq.map(f => f.getName.replace(".json", ""))
   }

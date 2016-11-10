@@ -1,16 +1,13 @@
 package controllers
 
-import javax.inject.Inject
-
-import play.api.{Configuration, Logger}
-import play.api.cache.CacheApi
+import old.play.GoodOldPlayframework
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.WSClient
 import play.api.mvc.{Action, Controller}
+import play.api.{Configuration, Logger}
 
+import scala.concurrent.Future
 import scala.concurrent.duration.Duration
-import scala.concurrent.{ExecutionContext, Future}
 
 case class Auth0Config(secret: String, clientId: String, callbackURL: String, domain: String)
 
@@ -26,14 +23,14 @@ object Auth0Config {
   }
 }
 
-@Singleton
-class Auth0Controller @Inject()(ws: WSClient, cache: CacheApi, configuration: Configuration)(implicit ec: ExecutionContext) extends Controller {
+object Auth0Controller extends Controller with GoodOldPlayframework {
 
+  implicit val ec = httpRequestsContext
 
   val logger = Logger("Auth0")
 
   def login(redirect: Option[String]) = Action { implicit request =>
-    Ok(views.html.login(Auth0Config.get(configuration))).withSession(
+    Ok(views.html.login(Auth0Config.get(Configuration))).withSession(
       "redirect_to" -> redirect.getOrElse(routes.SpeakersController.home().url)
     )
   }
@@ -48,7 +45,7 @@ class Auth0Controller @Inject()(ws: WSClient, cache: CacheApi, configuration: Co
       case Some(code) => getToken(code).flatMap { case (idToken, accessToken) =>
         getUser(accessToken).map { user =>
           val userId = (user \ "user_id").as[String]
-          cache.set(s"$userId-profile", user, Duration("1h"))
+          Cache.set(s"$userId-profile", user, Duration("1h"))
           logger.info(s"Login successful for admin user '${(user \ "email").as[String]}'")
           Redirect(request.session.get("redirect_to").getOrElse(routes.SpeakersController.home().url))
             .removingFromSession("redirect_to")
@@ -65,8 +62,8 @@ class Auth0Controller @Inject()(ws: WSClient, cache: CacheApi, configuration: Co
   }
 
   def getToken(code: String): Future[(String, String)] = {
-    val Auth0Config(clientSecret, clientId, callback, domain) = Auth0Config.get(configuration)
-    val tokenResponse = ws.url(s"https://$domain/oauth/token")
+    val Auth0Config(clientSecret, clientId, callback, domain) = Auth0Config.get(Configuration)
+    val tokenResponse = WS.url(s"https://$domain/oauth/token")
       .withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
       .post(
         Json.obj(
@@ -89,8 +86,8 @@ class Auth0Controller @Inject()(ws: WSClient, cache: CacheApi, configuration: Co
   }
 
   def getUser(accessToken: String): Future[JsValue] = {
-    val Auth0Config(_, _, _, domain) = Auth0Config.get(configuration)
-    val userResponse = ws.url(s"https://$domain/userinfo")
+    val Auth0Config(_, _, _, domain) = Auth0Config.get(Configuration)
+    val userResponse = WS.url(s"https://$domain/userinfo")
       .withQueryString("access_token" -> accessToken)
       .get()
     userResponse.flatMap(response => Future.successful(response.json))

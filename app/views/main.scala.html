@@ -1,4 +1,4 @@
-@(title: String, moreScripts: Html = Html(""))(content: Html)
+@(title: String, scripts: Html = play.twirl.api.Html(""), styles: Html = play.twirl.api.Html(""))(content: Html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +9,7 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/fontawesome/css/font-awesome.min.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        @styles
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
         <script>
@@ -26,6 +27,6 @@
         @content
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-        @moreScripts
+        @scripts
     </body>
 </html>

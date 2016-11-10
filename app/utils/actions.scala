@@ -2,6 +2,7 @@ package utils
 
 import java.net.URLEncoder
 
+import old.play.GoodOldPlayframework
 import play.api.Logger
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.{ActionBuilder, Request, Result, Results}
@@ -12,16 +13,16 @@ import scala.util.Success
 
 case class UserRequest[A](req: Request[A], user: JsObject)
 
-object UserAction extends ActionBuilder[UserRequest] {
+object UserAction extends ActionBuilder[UserRequest] with GoodOldPlayframework {
 
-  implicit val ec = Env.httpCallsExecContext
+  implicit val ec = httpRequestsContext
   val logger = Logger("AdminAction")
 
   def getUserFromAuth0Api(id: String): Future[Option[JsValue]] = {
     val encodedId = URLEncoder.encode(id, "UTF-8")
-    val domain = Env.configuration.getString("auth0.domain").getOrElse("-")
-    val bearer = Env.configuration.getString("auth0.apiBearer").getOrElse("-")
-    Env.WS.url(s"https://$domain/api/v2/users/$encodedId").withHeaders(
+    val domain = Configuration.getString("auth0.domain").getOrElse("-")
+    val bearer = Configuration.getString("auth0.apiBearer").getOrElse("-")
+    WS.url(s"https://$domain/api/v2/users/$encodedId").withHeaders(
       "Authorization" -> s"Bearer $bearer"
     ).get().flatMap {
       case response if response.status == 200 =>
@@ -37,20 +38,20 @@ object UserAction extends ActionBuilder[UserRequest] {
     Future.successful(request.session.get("userId")).flatMap {
       case None => Future.successful(None)
       case Some(id) =>
-        Env.cache.get[JsValue](s"$id-profile") match {
+        Cache.get[JsValue](s"$id-profile") match {
           case Some(profile) => Future.successful(Some(profile))
           case None => getUserFromAuth0Api(id).andThen {
-            case Success(Some(profile)) => Env.cache.set(s"$id-profile", profile, Duration("1h"))
+            case Success(Some(profile)) => Cache.set(s"$id-profile", profile, Duration("1h"))
           }
         }
     } flatMap {
       case None =>
         logger.info(s"Access refused to '${request.uri}' for user with unknown email")
-        Future.successful(Results.Redirect(controllers.routes.Auth0.login(Some(request.uri))))
+        Future.successful(Results.Redirect(controllers.routes.Auth0Controller.login(Some(request.uri))))
       case Some(profile) =>
         // logger.info(Json.prettyPrint(profile))
         logger.info(s"Access granted to '${request.uri}' for admin user with '${(profile \ "email").as[String]}'")
-        block(UserRequest(request, profile))
+        block(UserRequest[A](request, profile.as[JsObject]))
     }
   }
 }
