@@ -16,7 +16,7 @@ case class UserRequest[A](req: Request[A], user: JsObject)
 object UserAction extends ActionBuilder[UserRequest] with GoodOldPlayframework {
 
   implicit val ec = httpRequestsContext
-  val logger = Logger("AdminAction")
+  val logger = Logger("UserAction")
 
   def getUserFromAuth0Api(id: String): Future[Option[JsValue]] = {
     val encodedId = URLEncoder.encode(id, "UTF-8")
@@ -54,4 +54,21 @@ object UserAction extends ActionBuilder[UserRequest] with GoodOldPlayframework {
         block(UserRequest[A](request, profile.as[JsObject]))
     }
   }
+}
+
+case class EnhancedRequest[A](req: Request[A], accept: String, lang: String) {
+  def acceptsHtml = accept == "text/html"
+}
+
+object EnhancedAction extends ActionBuilder[EnhancedRequest] with GoodOldPlayframework {
+
+  override def invokeBlock[A](request: Request[A], block: (EnhancedRequest[A]) => Future[Result]): Future[Result] = {
+    val accept = request.headers.get("Accept").flatMap(_.split(",").toSeq.headOption).getOrElse("application/json")
+    val lang = request.headers.get("Accept-Language") flatMap { h =>
+      h.split(",").toSeq.map(l => l.split(";").toSeq.headOption).headOption.flatten.flatMap(i => i.split("-").toSeq.headOption)
+    } getOrElse "en"
+
+    block(EnhancedRequest[A](request, accept, lang))
+  }
+
 }
