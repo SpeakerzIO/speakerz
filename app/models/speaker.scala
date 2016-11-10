@@ -3,7 +3,9 @@ package models
 import akka.stream.Materializer
 import akka.stream.scaladsl.StreamConverters
 import akka.util.ByteString
+import anorm.{ SQL, SqlParser }
 import com.google.common.io.Files
+import old.play.api.libs.db.DB
 import play.api.Environment
 import play.api.libs.json.{JsObject, Json}
 
@@ -55,6 +57,20 @@ object Speaker {
           .map(_.validate(format).asOpt)
       }
       case _ => Future.successful(None)
+    }
+  }
+
+  def findByIdFromDB(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
+    Future {
+      DB.withConnection { implicit c =>
+        SQL("""select * from Speakerz swhere s.id = {id}""")
+          .on("id" -> id)
+          .as(SqlParser.str("document").singleOpt)
+          .map(Json.parse)
+          .map(format.reads)
+          .filter(_.isSuccess)
+          .map(_.get)
+      }
     }
   }
 }
