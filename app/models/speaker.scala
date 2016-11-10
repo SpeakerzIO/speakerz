@@ -65,13 +65,35 @@ object Speaker {
   def findByIdFromDB(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
     Future {
       DB.withConnection { implicit c =>
-        SQL("""select * from Speakerz swhere s.id = {id}""")
+        SQL("""select * from Speakerz s where s.id = {id}""")
           .on("id" -> Id.clean(id))
           .as(SqlParser.str("document").singleOpt)
           .map(Json.parse)
           .map(format.reads)
           .filter(_.isSuccess)
           .map(_.get)
+      }
+    }
+  }
+
+  def insert(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
+    Future {
+      DB.withConnection { implicit c =>
+        SQL("insert into Speakerz (id, document) values ({id}, {document}::json)")
+            .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+            .executeInsert()
+        ()
+      }
+    }
+  }
+
+  def update(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
+    Future {
+      DB.withConnection { implicit c =>
+        SQL("update Speakerz set document = {document}::json where id = {id}")
+          .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+          .executeUpdate()
+        ()
       }
     }
   }
