@@ -2,8 +2,10 @@ package controllers
 
 import java.io.{File, FileFilter}
 
+import anorm.Success
 import models.Speaker
 import old.play.GoodOldPlayframework
+import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
 import utils.EnhancedAction
@@ -11,8 +13,8 @@ import utils.EnhancedAction
 object SpeakersController extends Controller with GoodOldPlayframework {
 
   implicit val ec = httpRequestsContext
-  implicit val env = Environment
-  implicit val mat = defaultMaterializer
+  // implicit val env = Environment
+  // implicit val mat = defaultMaterializer
 
   lazy val existingIds = {
     Environment.getFile("/conf/speakers").listFiles(new FileFilter {
@@ -53,11 +55,5 @@ object SpeakersController extends Controller with GoodOldPlayframework {
       case None if req.acceptsHtml => Ok(views.html.notfound(req.user))
       case None => NotFound("Not found")
     }
-  }
-
-  private def lang(req: Request[AnyContent]): String = {
-    req.headers.get("Accept-Language") flatMap { h =>
-      h.split(",").toSeq.map(l => l.split(";").toSeq.headOption).headOption.flatten.flatMap(i => i.split("-").toSeq.headOption)
-    } getOrElse "en"
   }
 }

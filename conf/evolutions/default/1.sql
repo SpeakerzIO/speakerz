@@ -1,5 +1,3 @@
-# Speakers schema
-
 # --- !Ups
 
 CREATE TABLE Speakerz (

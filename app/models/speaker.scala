@@ -3,15 +3,14 @@ package models
 import akka.stream.Materializer
 import akka.stream.scaladsl.StreamConverters
 import akka.util.ByteString
-import anorm.{ SQL, SqlParser }
+import anorm.{SQL, SqlParser}
 import com.google.common.io.Files
 import old.play.api.libs.db.DB
-import play.api.Environment
+import play.api.{Environment, Logger}
 import play.api.libs.json.{JsObject, Json}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Success, Try}
-
 import utils.Id
 
 case class Speaker(
@@ -49,7 +48,7 @@ object Speaker {
 
   implicit val format = Json.format[Speaker]
 
-  def findById(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
+  def findByIdFromFiles(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
     Try(env.getFile(s"conf/speakers/${Id.clean(id)}.json")) match {
       case Success(file) if file.exists() => {
         val source = StreamConverters.fromInputStream(() => Files.asByteSource(file).openStream())
@@ -62,10 +61,10 @@ object Speaker {
     }
   }
 
-  def findByIdFromDB(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
-    Future {
+  def findById(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
+    Future.successful(
       DB.withConnection { implicit c =>
-        SQL("""select * from Speakerz s where s.id = {id}""")
+        SQL("select document::text from Speakerz where id = {id}")
           .on("id" -> Id.clean(id))
           .as(SqlParser.str("document").singleOpt)
           .map(Json.parse)
@@ -73,14 +72,14 @@ object Speaker {
           .filter(_.isSuccess)
           .map(_.get)
       }
-    }
+    )
   }
 
   def insert(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
     Future {
       DB.withConnection { implicit c =>
         SQL("insert into Speakerz (id, document) values ({id}, {document}::json)")
-            .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+            .on("id" -> Id.clean(speaker.id), "document" -> Json.stringify(speaker.toJson))
             .executeInsert()
         ()
       }
@@ -91,7 +90,7 @@ object Speaker {
     Future {
       DB.withConnection { implicit c =>
         SQL("update Speakerz set document = {document}::json where id = {id}")
-          .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+          .on("id" -> Id.clean(speaker.id), "document" -> Json.stringify(speaker.toJson))
           .executeUpdate()
         ()
       }
