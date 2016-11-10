@@ -36,7 +36,11 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
   }
 
   def logout = Action { implicit request =>
-    Ok(views.html.home()).removingFromSession("userId", "userToken", "accessToken", "redirect_to")
+    Ok(views.html.home()).removingFromSession(
+      "userId",
+      "userEmail",
+      "redirect_to"
+    )
   }
 
   def callback(codeOpt: Option[String] = None) = Action.async { implicit request =>
@@ -51,8 +55,7 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
             .removingFromSession("redirect_to")
             .withSession(
               "userId" -> userId,
-              "userToken" -> idToken,
-              "accessToken" -> accessToken
+              "userEmail" -> (user \ "email").as[String]
             )
         }
       }.recover {
