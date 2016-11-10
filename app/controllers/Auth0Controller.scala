@@ -33,7 +33,7 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
   }
 
   def logout = Action { implicit request =>
-    Ok(views.html.home()).removingFromSession(
+    Redirect(routes.SpeakersController.home()).removingFromSession(
       "userId",
       "userEmail",
       "redirect_to"

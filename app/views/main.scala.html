@@ -1,4 +1,4 @@
-@(title: String, scripts: Html = play.twirl.api.Html(""), styles: Html = play.twirl.api.Html(""))(content: Html)
+@(title: String, user: Option[User], scripts: Html = play.twirl.api.Html(""), styles: Html = play.twirl.api.Html(""))(content: Html)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +25,14 @@
     </head>
     <body>
         <nav class="light-blue lighten-1" role="navigation">
-            <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">Speakerz</a>
+            <div class="nav-wrapper container">
+                <a id="logo-container" href="/" class="brand-logo">Speakerz</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    @for(u <- user) {
+                        <li><a href="@routes.AccountController.edit()">@u.email</a></li>
+                        <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
+                    }
+                </ul>
             </div>
         </nav>
         @content

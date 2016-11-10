@@ -23,12 +23,12 @@ object SpeakersController extends Controller with GoodOldPlayframework {
     }).toSeq.map(f => f.getName.replace(".json", ""))
   }
 
-  def home = Action {
-    Ok(views.html.home())
+  def home = EnhancedAction { ctx =>
+    Ok(views.html.home(ctx.user))
   }
 
-  def developers = Action {
-    Ok(views.html.developers())
+  def developers = EnhancedAction { ctx =>
+    Ok(views.html.developers(ctx.user))
   }
 
   def createProfileLink(emailOpt: Option[String]) = Action {
@@ -68,27 +68,27 @@ object SpeakersController extends Controller with GoodOldPlayframework {
 
   def profile(id: String) = EnhancedAction.async { req =>
     Speaker.findById(id).map {
-      case Some(speaker) if req.acceptsHtml => Ok(views.html.speaker(speaker, req.lang))
+      case Some(speaker) if req.acceptsHtml => Ok(views.html.speaker(speaker, req.lang, req.user))
       case Some(speaker) => Ok(speaker.toJson)
-      case None if req.acceptsHtml => Ok(views.html.notfound())
+      case None if req.acceptsHtml => Ok(views.html.notfound(req.user))
       case None => NotFound("Not found")
-      }
+    }
   }
 
   def talks(id: String) = EnhancedAction.async { req =>
     Speaker.findById(id).map {
-      case Some(speaker) if req.acceptsHtml => Ok(views.html.talks(speaker, req.lang))
+      case Some(speaker) if req.acceptsHtml => Ok(views.html.talks(speaker, req.lang, req.user))
       case Some(speaker) => Ok((speaker.toJson \ "talks").getOrElse(Json.arr()))
-      case None if req.acceptsHtml => Ok(views.html.notfound())
+      case None if req.acceptsHtml => Ok(views.html.notfound(req.user))
       case None => NotFound("Not found")
     }
   }
 
   def talk(id: String, talkId: String) = EnhancedAction.async { req =>
     Speaker.findById(id).map(_.flatMap(speaker => speaker.talk(talkId).map(talk => (speaker, talk)))).map {
-      case Some((speaker, talk)) if req.acceptsHtml => Ok(views.html.talk(speaker, talk, req.lang))
+      case Some((speaker, talk)) if req.acceptsHtml => Ok(views.html.talk(speaker, talk, req.lang, req.user))
       case Some((speaker, talk)) => Ok(talk.toJson)
-      case None if req.acceptsHtml => Ok(views.html.notfound())
+      case None if req.acceptsHtml => Ok(views.html.notfound(req.user))
       case None => NotFound("Not found")
     }
   }

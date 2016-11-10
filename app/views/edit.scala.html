@@ -1,5 +1,5 @@
-@(email: String)
+@(user: User)
 
-@main("Edit profile") {
-    <h1>Edit profile of @email</h1>
+@main("Edit profile", Some(user)) {
+    <h1>Edit profile of @user.email</h1>
 }

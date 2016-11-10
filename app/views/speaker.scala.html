@@ -1,8 +1,8 @@
-@(speaker: models.Speaker, lang: String)
+@(speaker: models.Speaker, lang: String, user: Option[User])
 
 @import utils.Markdown._
 
-@main("Speaker") {
+@main("Speaker", user) {
 
     <div class="container">
         <h1>@speaker.name</h1>
