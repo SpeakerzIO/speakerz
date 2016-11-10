@@ -30,5 +30,5 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] form for Speaker management
 - [ ] form for Talk management
 - [ ] i18n
-- [ ] create Twitter account
+- [x] create Twitter account
 - [x] google analytics
