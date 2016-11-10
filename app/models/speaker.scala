@@ -35,6 +35,10 @@ case class Speaker(
       }
     }
   }
+
+  def talk(talkId: String): Option[Talk] = {
+    talks.find(talk => talk.id == talkId)
+  }
 }
 
 object Speaker {

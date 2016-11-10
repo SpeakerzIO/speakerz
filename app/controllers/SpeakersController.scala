@@ -63,14 +63,11 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
   }
 
   def profile(id: String) = Action.async { req =>
-    val lang = req.headers.get("Accept-Language") flatMap { h =>
-      h.split(",").toSeq.map(l => l.split(";").toSeq.headOption).headOption.flatten.flatMap(i => i.split("-").toSeq.headOption)
-    } getOrElse "en"
     Speaker.findById(id).map {
       case Some(speaker) => {
         req.headers.get("Accept") match {
           case Some(accept) => accept.split(",").toSeq.headOption match {
-            case Some("text/html") => Ok(views.html.speaker(speaker, lang))
+            case Some("text/html") => Ok(views.html.speaker(speaker, lang(req)))
             case e => Ok(speaker.toJson)
           }
           case None => Ok(speaker.toJson)
@@ -78,5 +75,56 @@ class SpeakersController @Inject()()(implicit env: Environment, ec: ExecutionCon
       }
       case _ => NotFound("Speaker not found")
     }
+  }
+
+  def talks(id: String) = Action.async { req =>
+    Speaker.findById(id).map {
+      case Some(speaker) => {
+        req.headers.get("Accept") match {
+          case Some(accept) => accept.split(",").toSeq.headOption match {
+            case Some("text/html") => Ok(views.html.talks(speaker, lang(req)))
+            case e => Ok((speaker.toJson \ "talks").getOrElse(Json.arr()))
+          }
+          case None => Ok((speaker.toJson \ "talks").getOrElse(Json.arr()))
+        }
+      }
+      case _ => NotFound("Speaker not found")
+    }
+  }
+
+  def talk(id: String, talkId: String) = Action.async { req =>
+    Speaker.findById(id).map {
+      case Some(speaker) => {
+        req.headers.get("Accept") match {
+          case Some(accept) => accept.split(",").toSeq.headOption match {
+            case Some("text/html") => {
+              speaker.talk(talkId) match {
+                case Some(talk) => Ok(views.html.talk(speaker, talk, lang(req)))
+                case None => NotFound("Talk not found")
+              }
+            }
+            case e => {
+              speaker.talk(talkId) match {
+                case Some(talk) => Ok(talk.toJson)
+                case None => NotFound("Talk not found")
+              }
+            }
+          }
+          case None => {
+            speaker.talk(talkId) match {
+              case Some(talk) => Ok(talk.toJson)
+              case None => NotFound("Talk not found")
+            }
+          }
+        }
+      }
+      case _ => NotFound("Speaker not found")
+    }
+  }
+
+  private def lang(req: Request[AnyContent]): String = {
+    req.headers.get("Accept-Language") flatMap { h =>
+      h.split(",").toSeq.map(l => l.split(";").toSeq.headOption).headOption.flatten.flatMap(i => i.split("-").toSeq.headOption)
+    } getOrElse "en"
   }
 }

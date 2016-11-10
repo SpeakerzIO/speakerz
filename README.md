@@ -10,7 +10,7 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] create homepage with usage info
 - [x] create link to github page with default values for fields
 - [x] add talks into speaker's model
-- [ ] create a nice website :-)
+- [ ] make cool CSS :-)
 - [x] manage DNS config for speakerz.io domain
 - [ ] create JS widget
 - [ ] HTTPS only
@@ -26,9 +26,13 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] profile visibility (private / public)
 - [ ] API management
 - [x] create a page for a Speaker
-- [ ] create a page for a Talk
+- [x] create a page for Talks
+- [x] create a page for a Talk
 - [ ] form for Speaker management
 - [ ] form for Talk management
 - [ ] i18n
 - [x] create Twitter account
 - [x] google analytics
+- [ ] API doc
+- [x] API for Speaker
+- [x] API for Talk sub-ressource

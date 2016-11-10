@@ -38,6 +38,8 @@ case class Talk(
                  sessions: Seq[Session]
                ) {
 
+  def toJson = Talk.format.writes(this)
+
   def name(lang: String): String = {
     (name \ lang).asOpt[String]
       .orElse((name \ "en").asOpt[String])
