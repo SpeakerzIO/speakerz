@@ -27,6 +27,10 @@ object SpeakersController extends Controller with GoodOldPlayframework {
     Ok(views.html.home())
   }
 
+  def developers = Action {
+    Ok(views.html.developers())
+  }
+
   def createProfileLink(emailOpt: Option[String]) = Action {
     emailOpt match {
       case None => BadRequest(Json.obj("error" -> "no email provided"))

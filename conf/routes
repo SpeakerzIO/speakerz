@@ -7,12 +7,13 @@ GET     /speakers/:id                    controllers.SpeakersController.profile(
 GET     /speakers/:id/talks              controllers.SpeakersController.talks(id: String)
 GET     /speakers/:id/talks/:talkId      controllers.SpeakersController.talk(id: String, talkId: String)
 
-GET     /auth/login                           controllers.Auth0Controller.login(redirect: Option[String])
-GET     /auth/logout                          controllers.Auth0Controller.logout
-GET     /auth/callback                        controllers.Auth0Controller.callback(code: Option[String])
+GET     /auth/login                      controllers.Auth0Controller.login(redirect: Option[String])
+GET     /auth/logout                     controllers.Auth0Controller.logout
+GET     /auth/callback                   controllers.Auth0Controller.callback(code: Option[String])
 
 
 GET     /edit                            controllers.AccountController.edit
+GET     /developers                      controllers.SpeakersController.developers
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)
