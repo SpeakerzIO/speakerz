@@ -98,6 +98,7 @@ trait GoodOldPlayframework {
 
 object api {
   object Play {
+    def environment = Env.environment
     def application = Env.application
     def maybeApplication = Option(Env.application)
     def injector = Env.injector

@@ -1,10 +1,10 @@
 package controllers
 
 import old.play.GoodOldPlayframework
+import play.api.Logger
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, Controller}
-import play.api.{Configuration, Logger}
 
 import scala.concurrent.Future
 import scala.concurrent.duration.Duration
@@ -12,15 +12,12 @@ import scala.concurrent.duration.Duration
 case class Auth0Config(secret: String, clientId: String, callbackURL: String, domain: String)
 
 object Auth0Config {
-
-  def get(configuration: Configuration) = {
-    Auth0Config(
-      configuration.getString("auth0.admin.clientSecret").get,
-      configuration.getString("auth0.admin.clientId").get,
-      configuration.getString("auth0.callbackURL").get,
-      configuration.getString("auth0.domain").get
-    )
-  }
+  lazy val config = Auth0Config(
+    old.play.api.Play.configuration.getString("auth0.clientSecret").get,
+    old.play.api.Play.configuration.getString("auth0.clientId").get,
+    old.play.api.Play.configuration.getString("auth0.callbackURL").get,
+    old.play.api.Play.configuration.getString("auth0.domain").get
+  )
 }
 
 object Auth0Controller extends Controller with GoodOldPlayframework {
@@ -30,7 +27,7 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
   val logger = Logger("Auth0")
 
   def login(redirect: Option[String]) = Action { implicit request =>
-    Ok(views.html.login(Auth0Config.get(Configuration))).withSession(
+    Ok(views.html.login(Auth0Config.config)).withSession(
       "redirect_to" -> redirect.getOrElse(routes.SpeakersController.home().url)
     )
   }
@@ -65,7 +62,7 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
   }
 
   def getToken(code: String): Future[(String, String)] = {
-    val Auth0Config(clientSecret, clientId, callback, domain) = Auth0Config.get(Configuration)
+    val Auth0Config(clientSecret, clientId, callback, domain) = Auth0Config.config
     val tokenResponse = WS.url(s"https://$domain/oauth/token")
       .withHeaders(HeaderNames.ACCEPT -> MimeTypes.JSON)
       .post(
@@ -89,7 +86,7 @@ object Auth0Controller extends Controller with GoodOldPlayframework {
   }
 
   def getUser(accessToken: String): Future[JsValue] = {
-    val Auth0Config(_, _, _, domain) = Auth0Config.get(Configuration)
+    val Auth0Config(_, _, _, domain) = Auth0Config.config
     val userResponse = WS.url(s"https://$domain/userinfo")
       .withQueryString("access_token" -> accessToken)
       .get()

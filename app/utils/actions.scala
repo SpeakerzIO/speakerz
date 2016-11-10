@@ -21,7 +21,7 @@ object UserAction extends ActionBuilder[UserRequest] with GoodOldPlayframework {
   def getUserFromAuth0Api(id: String): Future[Option[JsValue]] = {
     val encodedId = URLEncoder.encode(id, "UTF-8")
     val domain = Configuration.getString("auth0.domain").getOrElse("-")
-    val bearer = Configuration.getString("auth0.apiBearer").getOrElse("-")
+    val bearer = Configuration.getString("auth0.apiBearerRead").getOrElse("-")
     WS.url(s"https://$domain/api/v2/users/$encodedId").withHeaders(
       "Authorization" -> s"Bearer $bearer"
     ).get().flatMap {
