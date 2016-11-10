@@ -12,8 +12,8 @@ import scala.util.{Success, Try}
 
 case class Speaker(
                     id: String,
-                    nickname: String,
-                    name: String,
+                    nickname: Option[String],
+                    name: Option[String],
                     resume: Option[JsObject],
                     avatarUrl: Option[String],
                     websiteUrl: Option[String],

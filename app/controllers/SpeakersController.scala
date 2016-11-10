@@ -9,7 +9,7 @@ import old.play.GoodOldPlayframework
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc._
-import utils.{EnhancedAction, EnhancedRequest}
+import utils.EnhancedAction
 
 object SpeakersController extends Controller with GoodOldPlayframework {
 
@@ -27,19 +27,19 @@ object SpeakersController extends Controller with GoodOldPlayframework {
     Ok(views.html.home())
   }
 
-  def createProfileLink(nicknameOpt: Option[String]) = Action {
-    nicknameOpt match {
-      case None => BadRequest(Json.obj("error" -> "no nickname provided"))
-      case Some(nickname) => {
+  def createProfileLink(emailOpt: Option[String]) = Action {
+    emailOpt match {
+      case None => BadRequest(Json.obj("error" -> "no email provided"))
+      case Some(email) => {
         val encoder = Base64.getEncoder
-        val newId = encoder.encodeToString(nickname.getBytes("UTF-8"))
+        val newId = encoder.encodeToString(email.getBytes("UTF-8"))
         if (existingIds.contains(newId)) {
           Conflict(Json.obj("error" -> "duplicate id"))
         } else {
           val content = Speaker(
             id = newId,
-            nickname = nickname,
-            name = "Your name here",
+            nickname = Some("Your nickname here"),
+            name = Some("Your name here"),
             resume = Some(Json.obj(
               "en" -> "Your resume here",
               "fr" -> "Votre bio ici",
@@ -47,12 +47,12 @@ object SpeakersController extends Controller with GoodOldPlayframework {
             )),
             avatarUrl = Some("Your avatar URL here"),
             websiteUrl = Some("Your website URL here"),
-            twitterHandle = Some(s"@$nickname"),
-            githubHandle = Some(nickname),
+            twitterHandle = Some("Your twitter handle here"),
+            githubHandle = Some("Your github handle here"),
             talks = Seq()
           ).toJson
-          val message = URLEncoder.encode(s"Adding @$nickname to speakerz.io", "UTF-8")
-          val description = URLEncoder.encode(s"Adding @$nickname to speakerz.io from @me at ${DateTime.now().toString("dd/MM/yyyy HH:mm:ss")}", "UTF-8")
+          val message = URLEncoder.encode(s"Adding $email to speakerz.io", "UTF-8")
+          val description = URLEncoder.encode(s"Adding $email to speakerz.io from @me at ${DateTime.now().toString("dd/MM/yyyy HH:mm:ss")}", "UTF-8")
           val encodedContent = URLEncoder.encode(Json.prettyPrint(content), "UTF-8")
           val pr = URLEncoder.encode("quick-pull", "UTF-8")
           val link = s"https://github.com/sebprunier/speakerz/new/master/conf/speakers?filename=$newId.json&message=$message&description=$description&commit-choice=$pr&value=$encodedContent"

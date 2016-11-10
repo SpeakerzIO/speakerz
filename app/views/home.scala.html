@@ -5,9 +5,9 @@
         $(function() {
             var openPR = false;
             $('#profile_container').hide();
-            $('#input_nickname').keyup(function(e) {
+            $('#input_email').keyup(function(e) {
                 var value = $(this).val();
-                $.get('/speakers?nickname=' + value).then(function(data) {
+                $.get('/speakers?email=' + value).then(function(data) {
                     if (data.link) {
                         // $('#label').removeAttr('error').data('success', 'right');
                         $('#create_button').attr('href', data.link).removeClass('grey').addClass('green').html('Create your profile');
@@ -16,14 +16,14 @@
                         openPR = true;
                     } else {
                         // $('#label').data('error', 'wrong').removeAttr('success');
-                        $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('You should try an actual nickname');
+                        $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('You should try an actual email');
                         $('#profile').attr('href', '#').html('');
                         $('#profile_container').hide();
                         openPR = false;
                     }
                 }, function() {
                     // $('#label').data('error', 'wrong').removeAttr('success');
-                    $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('Sorry, duplicates nickname');
+                    $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('Sorry, duplicate email');
                     $('#profile').attr('href', '#').html('');
                     $('#profile_container').hide();
                     openPR = false;
@@ -52,7 +52,7 @@
             </div>
             <div class="row center">
                 <div class="row col s6 offset-s3">
-                    <input type="text" class="validate" id="input_nickname" placeholder="Your nickname goes here"/>
+                    <input type="text" class="validate" id="input_email" placeholder="Your email goes here"/>
                     <br/>
                 </div>
                 <div class="row col s6 offset-s3">

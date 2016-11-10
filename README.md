@@ -15,7 +15,7 @@ This is a very simple app to manage your Speaker's profile!
 - [ ] create JS widget
 - [ ] HTTPS only
 - [x] add markdown support
-- [ ] use email instead of nickname as an id
+- [x] use email instead of nickname as an id
 - [ ] manage '+' in email addresses
 - [ ] store profiles into PostgreSQL
 - [ ] enable authentication with Auth0

@@ -2,7 +2,7 @@
 # ~~~~
 
 GET     /                                controllers.SpeakersController.home
-GET     /speakers                        controllers.SpeakersController.createProfileLink(nickname: Option[String])
+GET     /speakers                        controllers.SpeakersController.createProfileLink(email: Option[String])
 GET     /speakers/:id                    controllers.SpeakersController.profile(id: String)
 GET     /speakers/:id/talks              controllers.SpeakersController.talks(id: String)
 GET     /speakers/:id/talks/:talkId      controllers.SpeakersController.talk(id: String, talkId: String)
