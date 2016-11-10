@@ -32,6 +32,9 @@
                         <li><a href="@routes.AccountController.edit()">@u.email</a></li>
                         <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
                     }
+                    @if(user.isEmpty) {
+                        <li><a href="@routes.Auth0Controller.login(redirect = Some("/"))">Login</a></li>
+                    }
                 </ul>
             </div>
         </nav>
