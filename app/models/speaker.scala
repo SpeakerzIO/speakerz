@@ -12,6 +12,8 @@ import play.api.libs.json.{JsObject, Json}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Success, Try}
 
+import utils.Id
+
 case class Speaker(
                     id: String,
                     nickname: Option[String],
@@ -48,7 +50,7 @@ object Speaker {
   implicit val format = Json.format[Speaker]
 
   def findById(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
-    Try(env.getFile(s"conf/speakers/$id.json")) match {
+    Try(env.getFile(s"conf/speakers/${Id.clean(id)}.json")) match {
       case Success(file) if file.exists() => {
         val source = StreamConverters.fromInputStream(() => Files.asByteSource(file).openStream())
         source.runFold(ByteString.empty)((a, b) => a.concat(b))
@@ -64,7 +66,7 @@ object Speaker {
     Future {
       DB.withConnection { implicit c =>
         SQL("""select * from Speakerz swhere s.id = {id}""")
-          .on("id" -> id)
+          .on("id" -> Id.clean(id))
           .as(SqlParser.str("document").singleOpt)
           .map(Json.parse)
           .map(format.reads)

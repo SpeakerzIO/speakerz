@@ -1,64 +1,24 @@
 @(user: Option[User])
 
-@moreScripts = {
-    <script>
-        $(function() {
-            var openPR = false;
-            $('#profile_container').hide();
-            $('#input_email').keyup(function(e) {
-                var value = $(this).val();
-                $.get('/speakers?email=' + value).then(function(data) {
-                    if (data.link) {
-                        // $('#label').removeAttr('error').data('success', 'right');
-                        $('#create_button').attr('href', data.link).removeClass('grey').addClass('green').html('Create your profile');
-                        $('#profile').attr('href', data.profile).html('https://speakerz.io' + data.profile);
-                        $('#profile_container').show();
-                        openPR = true;
-                    } else {
-                        // $('#label').data('error', 'wrong').removeAttr('success');
-                        $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('You should try an actual email');
-                        $('#profile').attr('href', '#').html('');
-                        $('#profile_container').hide();
-                        openPR = false;
-                    }
-                }, function() {
-                    // $('#label').data('error', 'wrong').removeAttr('success');
-                    $('#create_button').attr('href', '#').removeClass('green').addClass('grey').html('Sorry, duplicate email');
-                    $('#profile').attr('href', '#').html('');
-                    $('#profile_container').hide();
-                    openPR = false;
-                });
-            });
-            $('#create_button').click(function(e) {
-               if (!openPR) {
-                   e.preventDefault();
-               }
-            });
-        });
-    </script>
-}
-
-@main("Speakerz", user = user, scripts = moreScripts) {
+@main("Speakerz", user = user) {
     <div class="section no-pad-bot" id="index-banner">
         <div class="container">
-            <br><br>
             <h1 class="header center orange-text">Speakerz</h1>
             <div class="row center">
                 <h5 class="header col s12 light">Sharable Speaker profiles with an API</h5>
             </div>
             <div class="row center">
                 <div class="row col s6 offset-s3">
-                    <input type="text" class="validate" id="input_email" placeholder="Your email goes here"/>
-                    <br/>
-                </div>
-                <div class="row col s6 offset-s3">
-                    <a href="#" id="create_button" target="_blank" class="btn-large waves-effect waves-light grey">Create your profile</a>
-                </div>
-                <div id="profile_container" class="row col s6 offset-s3">
-                    Your future profile will be available at <a href="#" id="profile" target="_blank"></a>
+                    @user match {
+                        case Some(u) => {
+                            <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light">Edit your profile</a>
+                        }
+                        case None => {
+                            <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light">Create your profile</a>
+                        }
+                    }
                 </div>
             </div>
-            <br><br>
         </div>
     </div>
     <div class="container">
