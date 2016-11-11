@@ -119,22 +119,41 @@
       return (
         <div className="row">
           <form className="col s12">
-            <h5>Basic info</h5>
-            <BasicInfo state={{
-                nickname: this.state.nickname,
-                name: this.state.name,
-                avatarUrl: this.state.avatarUrl,
-            }} setState={state => this.setState(Object.assign({}, state))}/>
-            <h5>Links</h5>
-            <Links state={{
-                websiteUrl: this.state.websiteUrl,
-                twitterHandle: this.state.twitterHandle,
-                githubHandle: this.state.githubHandle,
-            }} setState={state => this.setState(Object.assign({}, state))} />
-            <h5>Your resume</h5>
-            <Resume state={this.state.resume} setState={resume => this.setState({ resume })} />
-            <Talks state={this.state.talks} setState={talks => this.setState({ talks })} />
-            <button className="waves-effect waves-light btn" type="button" onClick={this.submit}>
+            <ul className="collapsible" data-collapsible="accordion">
+              <li>
+                <div className="collapsible-header active"><i className="material-icons">perm_identity</i>Your infos</div>
+                <div className="collapsible-body collapsible-with-margin">
+                  <BasicInfo state={{
+                      nickname: this.state.nickname,
+                      name: this.state.name,
+                      avatarUrl: this.state.avatarUrl,
+                  }} setState={state => this.setState(Object.assign({}, state))} />
+                </div>
+              </li>
+              <li>
+                <div className="collapsible-header"><i className="material-icons">code</i>Your links</div>
+                <div className="collapsible-body collapsible-with-margin">
+                  <Links state={{
+                      websiteUrl: this.state.websiteUrl,
+                      twitterHandle: this.state.twitterHandle,
+                      githubHandle: this.state.githubHandle,
+                  }} setState={state => this.setState(Object.assign({}, state))} />
+                </div>
+              </li>
+              <li>
+                <div className="collapsible-header"><i className="material-icons">subject</i>Your Resume</div>
+                <div className="collapsible-body collapsible-with-margin">
+                  <Resume state={this.state.resume} setState={resume => this.setState({ resume })} />
+                </div>
+              </li>
+              <li>
+                <div className="collapsible-header"><i className="material-icons">settings_voice</i>Your Talks</div>
+                <div className="collapsible-body collapsible-with-margin">
+                  <Talks state={this.state.talks} setState={talks => this.setState({ talks })} />
+                </div>
+              </li>
+            </ul>
+            <button className="waves-effect waves-light btn right-align" type="button" onClick={this.submit}>
               <i className="material-icons left">contacts</i>Save
             </button>
           </form>
@@ -146,5 +165,6 @@
   ReactDOM.render(<SpeakerProfile speaker={window.__speaker} />, document.getElementById('app'));
   setTimeout(() => {
     Materialize.updateTextFields();
+    $('.collapsible').collapsible();
   }, 200);
 }

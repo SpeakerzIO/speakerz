@@ -22,3 +22,7 @@ a.anchor {
 h3:hover a.anchor {
     visibility: visible;
 }
+
+.collapsible-with-margin {
+    margin: 10px;
+}
