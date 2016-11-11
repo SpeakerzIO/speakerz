@@ -1,71 +1,43 @@
 @(user: Option[User])
 
-@main("Speakerz", user = user) {
-    <div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-            <h1 class="header center orange-text">Speakerz</h1>
-            <div class="row center">
-                <h5 class="header col s12 light">Sharable Speaker profiles with an API</h5>
+@customScripts = {
+    <script>hljs.initHighlightingOnLoad();</script>
+}
+
+@main("Speakerz", user = user, scripts = customScripts) {
+<div class="container">
+    <h1 class="indigo-text center-align">Speaker's profile with an API</h1>
+    <div class="row">
+        <div class="col s12 m12 l6">
+            <h2 class="center-align">Manage your profile</h2>
+            <p class="flow-text center-align">
+                Write your profile once, use it everywhere!
+            </p>
+            <div class="center-align">
+            @user match {
+                case Some(u) => {
+                    <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light amber">Edit your profile</a>
+                }
+                case None => {
+                    <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light amber">Create your profile</a>
+                }
+            }
             </div>
-            <div class="row center">
-                <div class="row col s6 offset-s3">
-                    @user match {
-                        case Some(u) => {
-                            <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light">Edit your profile</a>
-                        }
-                        case None => {
-                            <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light">Create your profile</a>
-                        }
-                    }
-                </div>
+        </div>
+        <div class="col s12 m12 l6">
+            <h2 class="center-align">Share your profile</h2>
+            <div>
+                <pre>
+                    <code class="bash">
+    hash=`echo -n "mail@@you.com" | base64`
+    curl http://www.speakerz.io/speakers/$hash
+                    </code>
+                </pre>
+            </div>
+            <div class="center-align">
+                <a href="#" class="btn-large waves-effect waves-light amber">Browse documentation</a>
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="section">
-            <div class="row">
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
-                        <h5 class="center">Don't repeat yourself</h5>
-                        <p class="light">
-
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
-                        <h5 class="center">Everything at the same place</h5>
-                        <p class="light">
-
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col s12 m4">
-                    <div class="icon-block">
-                        <h2 class="center light-blue-text"><i class="material-icons">http</i></h2>
-                        <h5 class="center">Developers friendly</h5>
-                        <p class="light">
-                           Speakerz provides a simple and easy to use REST API to integrate speaker profiles to your app.
-                        </p>
-                        <a class="waves-effect waves-light btn center-align" href="@routes.SpeakersController.developers()">documentation</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br><br>
-        <div class="section">
-        </div>
-    </div>
-
-    <footer class="page-footer orange">
-        <div class="footer-copyright">
-            <div class="container">
-                <span>Proudly hosted on <a target="_blank" href="https://www.clever-cloud.com/">Clever Cloud</a></span>
-            </div>
-        </div>
-    </footer>
+</div>
 }

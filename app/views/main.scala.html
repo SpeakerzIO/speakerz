@@ -6,6 +6,7 @@
         <title>@title</title>
         <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css"  media="screen,projection"/>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/fontawesome/css/font-awesome.min.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
@@ -24,23 +25,61 @@
         </script>
     </head>
     <body>
-        <nav class="light-blue lighten-1" role="navigation">
-            <div class="nav-wrapper container">
-                <a id="logo-container" href="/" class="brand-logo">Speakerz</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    @for(u <- user) {
-                        <li><a href="@routes.AccountController.edit()">@u.email</a></li>
-                        <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
-                    }
-                    @if(user.isEmpty) {
-                        <li><a href="@routes.Auth0Controller.login(redirect = Some("/"))">Login</a></li>
-                    }
-                </ul>
-            </div>
-        </nav>
+        <div class="navbar-fixed">
+            <nav class="indigo" role="navigation">
+                <div class="nav-wrapper container">
+                    <a id="logo-container" href="/" class="brand-logo">speakerz.io</a>
+                    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+                    <ul class="right hide-on-med-and-down">
+                        @for(u <- user) {
+                            <li><a href="@routes.AccountController.edit()">@u.email</a></li>
+                            <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
+                        }
+                        @if(user.isEmpty) {
+                            <li><a href="@routes.Auth0Controller.login(redirect = Some("/"))">Login</a></li>
+                        }
+                    </ul>
+                    <ul id="nav-mobile" class="side-nav">
+                        @for(u <- user) {
+                            <li>
+                                <a class="indigo-text" href="@routes.AccountController.edit()">
+                                    @u.email
+                                </a>
+                            </li>
+                            <li>
+                                <a class="indigo-text" href="@routes.Auth0Controller.logout()">
+                                    Logout
+                                </a>
+                            </li>
+                        }
+                        @if(user.isEmpty) {
+                            <li>
+                                <a class="indigo-text" href="@routes.Auth0Controller.login(redirect = Some("/"))">
+                                    Login
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <main>
         @content
+        </main>
+
+        <footer class="page-footer indigo   ">
+            <div class="footer-copyright">
+                <div class="container">
+                    <span>Proudly hosted on <a target="_blank" class="grey-text text-lighten-4" href="https://www.clever-cloud.com/">Clever Cloud</a></span>
+                </div>
+            </div>
+        </footer>
+
         <script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("javascripts/main.js")"></script>
         @scripts
     </body>
 </html>
