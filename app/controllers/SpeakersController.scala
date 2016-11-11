@@ -13,14 +13,6 @@ import utils.EnhancedAction
 object SpeakersController extends Controller with GoodOldPlayframework {
 
   implicit val ec = httpRequestsContext
-  // implicit val env = Environment
-  // implicit val mat = defaultMaterializer
-
-  lazy val existingIds = {
-    Environment.getFile("/conf/speakers").listFiles(new FileFilter {
-      override def accept(pathname: File): Boolean = pathname.getName.endsWith(".json")
-    }).toSeq.map(f => f.getName.replace(".json", ""))
-  }
 
   def home = EnhancedAction { ctx =>
     Ok(views.html.home(ctx.user))

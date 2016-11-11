@@ -1,17 +1,11 @@
 package models
 
-import akka.stream.Materializer
-import akka.stream.scaladsl.StreamConverters
-import akka.util.ByteString
 import anorm.{SQL, SqlParser}
-import com.google.common.io.Files
 import old.play.api.libs.db.DB
-import play.api.{Environment, Logger}
 import play.api.libs.json.{JsObject, Json}
+import utils.Id
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Success, Try}
-import utils.Id
 
 case class Speaker(
                     id: String,
@@ -47,19 +41,6 @@ case class Speaker(
 object Speaker {
 
   implicit val format = Json.format[Speaker]
-
-  def findByIdFromFiles(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
-    Try(env.getFile(s"conf/speakers/${Id.clean(id)}.json")) match {
-      case Success(file) if file.exists() => {
-        val source = StreamConverters.fromInputStream(() => Files.asByteSource(file).openStream())
-        source.runFold(ByteString.empty)((a, b) => a.concat(b))
-          .map(_.utf8String)
-          .map(Json.parse)
-          .map(_.validate(format).asOpt)
-      }
-      case _ => Future.successful(None)
-    }
-  }
 
   def findById(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
     Future.successful(
@@ -97,3 +78,22 @@ object Speaker {
     }
   }
 }
+
+
+// def findByIdFromFiles(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
+//   Try(env.getFile(s"conf/speakers/${Id.clean(id)}.json")) match {
+//     case Success(file) if file.exists() => {
+//       val source = StreamConverters.fromInputStream(() => Files.asByteSource(file).openStream())
+//       source.runFold(ByteString.empty)((a, b) => a.concat(b))
+//         .map(_.utf8String)
+//         .map(Json.parse)
+//         .map(_.validate(format).asOpt)
+//     }
+//     case _ => Future.successful(None)
+//   }
+// }
+// lazy val existingIds = {
+//   Environment.getFile("/conf/speakers").listFiles(new FileFilter {
+//     override def accept(pathname: File): Boolean = pathname.getName.endsWith(".json")
+//   }).toSeq.map(f => f.getName.replace(".json", ""))
+// }
