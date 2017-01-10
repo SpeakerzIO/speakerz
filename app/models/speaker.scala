@@ -44,6 +44,10 @@ case class Speaker(
       case None => Speaker.insert(this).map(_ => this)
     }
   }
+
+  def delete()(implicit ec: ExecutionContext): Future[Speaker] = {
+    Speaker.delete(this.id).map(_ => this)
+  }
 }
 
 object Speaker {
@@ -82,6 +86,17 @@ object Speaker {
       DB.withConnection { implicit c =>
         SQL("update Speakerz set document = {document}::json where id = {id}")
           .on("id" -> Id.fromEmail(speaker.id), "document" -> Json.stringify(speaker.toJson))
+          .executeUpdate()
+        ()
+      }
+    }
+  }
+
+  def delete(id: String)(implicit ec: ExecutionContext): Future[Unit] = {
+    Future {
+      DB.withConnection { implicit c =>
+        SQL("delete from Speakerz where id = {id}")
+          .on("id" -> id)
           .executeUpdate()
         ()
       }

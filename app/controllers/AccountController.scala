@@ -13,12 +13,25 @@ object AccountController extends Controller with GoodOldPlayframework {
 
   implicit val ec = httpRequestsContext
 
-  def edit = UserAction.async { req =>
-    val id = Id.fromEmail(req.user.email)
+  def destroyAccount = UserAction.async { ctx =>
+    val id = Id.fromEmail(ctx.user.email)
+    Speaker.findById(id).flatMap {
+      case Some(speaker) => speaker.delete().map { _ =>
+        // TODO : call auth0 here 
+        Redirect(routes.SpeakersController.home()).withNewSession
+      }
+      case None => {
+        Future.successful(Redirect(routes.SpeakersController.home()).withNewSession)
+      }
+    }
+  }
+
+  def edit = UserAction.async { ctx =>
+    val id = Id.fromEmail(ctx.user.email)
     Speaker.findById(id).map(_.getOrElse(Speaker(
       id = id,
       nickname = None,
-      name = req.user.name,
+      name = ctx.user.name,
       resume = None,
       avatarUrl = None,
       websiteUrl = None,
@@ -26,14 +39,14 @@ object AccountController extends Controller with GoodOldPlayframework {
       githubHandle = None,
       talks = Seq.empty[Talk]
     ))).map { speaker =>
-      Ok(views.html.edit(req.user, speaker))
+      Ok(views.html.edit(ctx.user, speaker))
     }
   }
 
-  def save = UserAction.async(parse.json) { req =>
-    val payload = req.req.body.as[JsObject] ++ Json.obj(
-      "email" -> req.user.email,
-      "id" -> Id.fromEmail(req.user.email)
+  def save = UserAction.async(parse.json) { ctx =>
+    val payload = ctx.req.body.as[JsObject] ++ Json.obj(
+      "email" -> ctx.user.email,
+      "id" -> Id.fromEmail(ctx.user.email)
     )
     Logger.info(Json.prettyPrint(payload))
     Speaker(payload) match {
@@ -43,7 +56,7 @@ object AccountController extends Controller with GoodOldPlayframework {
         }
       }
       case None => {
-        Future.successful(BadRequest(views.html.badFormat(req.user)))
+        Future.successful(BadRequest(views.html.badFormat(ctx.user)))
       }
     }
   }

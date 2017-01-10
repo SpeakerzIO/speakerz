@@ -2,7 +2,9 @@ name := """speakerz"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file("."))
+  .enablePlugins(PlayScala)
+  .settings(Javascript.buildUiSettings)
 
 scalaVersion := "2.11.7"
 
@@ -17,4 +19,3 @@ libraryDependencies ++= Seq(
   "org.pegdown" % "pegdown" % "1.6.0",
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
-

@@ -66,6 +66,9 @@ object Env {
   lazy val httpCallsExecContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(procNbr * 10, factory("http-calls")))
   lazy val dataStoreExecContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(procNbr * 5, factory("data-store")))
 
+  lazy val env = configuration.getString("app.env").getOrElse("prod")
+  lazy val hash = s"${System.currentTimeMillis}"
+  lazy val isDev = env.equalsIgnoreCase("dev")
 }
 
 trait GoodOldPlayframework {
