@@ -31,7 +31,8 @@
                     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         @for(u <- user) {
-                            <li><a href="@routes.AccountController.edit()">@u.email</a></li>
+                            <li><a href="@routes.AccountController.edit()"><i class="material-icons left">perm_identity</i> @u.email</a></li>
+                            <li><a href="@routes.SpeakersController.developers()"><i class="material-icons left">assignment</i>Doc</a></li>
                             <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
                         }
                         @if(user.isEmpty) {

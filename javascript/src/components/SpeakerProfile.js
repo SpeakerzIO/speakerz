@@ -1,110 +1,11 @@
 import React from 'react';
-import showdown from 'showdown';
 import $ from 'jquery';
 
-const converter = new showdown.Converter();
-
-const BasicInfo = React.createClass({
-  render() {
-    const state = this.props.state;
-    return (
-      <div className="row">
-        <div className="col s6">
-          <div className="row">
-            <div className="input-field col s12">
-              <input id="name" type="text" className="validate"
-                     value={state.name} onChange={e => this.props.setState(Object.assign({}, state, { name: e.target.value }))} />
-              <label for="name">Name</label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input id="nickname" type="text" className="validate"
-                     value={state.nickname} onChange={e => this.props.setState(Object.assign({}, state, { nickname: e.target.value }))} />
-              <label for="nickname">Nickname</label>
-            </div>
-          </div>
-        </div>
-        <div className="col s6">
-          <div className="row">
-            <div className="input-field col s12">
-              <img src={state.avatarUrl || '#'}  />
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input id="avatar" type="text" className="validate"
-                     value={state.avatarUrl} onChange={e => this.props.setState(Object.assign({}, state, { avatarUrl: e.target.value }))} />
-              <label for="avatar">Avatar</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-});
-
-const Resume = React.createClass({
-  getInitialState() {
-    return {
-      showMarkdown: false
-    }
-  },
-  render() {
-    const state = this.props.state;
-    return (
-      <div className="row">
-        <div className="col s12">
-          <div className="input-field col s12">
-            <textarea
-              id="textarea1"
-              className="materialize-textarea"
-              value={state.en}
-              onChange={e => this.props.setState(Object.assign({}, state, { en: e.target.value }))}></textarea>
-            <label htmlFor="textarea1">Your Resume</label>
-            <button type="button" className="waves-effect waves-light btn right-align" onClick={() => this.setState(ps => ({ showMarkdown: !ps.showMarkdown }))}>Preview</button>
-          </div>
-        </div>
-        {this.state.showMarkdown && (
-          <div style={{ position: 'fixed', backgroundColor: 'rgba(255, 255, 255, 0.5)', left: 0, top: 0, width: '100vw', height: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000,  }}>
-            <div style={{ width: '50vw', height: '50vh', backgroundColor: 'white', color: 'black', border: '1px solid black' }} dangerouslySetInnerHTML={{ __html: converter.makeHtml(state.en) }} />
-          </div>
-        )}
-      </div>
-    );
-  }
-});
-
-const Links = React.createClass({
-  render() {
-    const state = this.props.state;
-    return (
-      <div className="row">
-        <div className="input-field col s6">
-          <input id="websiteUrl" type="text" className="validate"
-                 value={state.websiteUrl} onChange={e => this.props.setState(Object.assign({}, state, { websiteUrl: e.target.value }))} />
-          <label for="websiteUrl">Your Website URL</label>
-        </div>
-        <div className="input-field col s6">
-          <input id="twitterHandle" type="text" className="validate"
-                 value={state.twitterHandle} onChange={e => this.props.setState(Object.assign({}, state, { twitterHandle: e.target.value }))} />
-          <label for="twitterHandle">@YourTwitterHandle</label>
-        </div>
-        <div className="input-field col s6">
-          <input id="githubHandle" type="text" className="validate"
-                 value={state.githubHandle} onChange={e => this.props.setState(Object.assign({}, state, { githubHandle: e.target.value }))} />
-          <label for="githubHandle">YourGithubHandle</label>
-        </div>
-      </div>
-    );
-  }
-});
-
-const Talks = React.createClass({
-  render() {
-    return null;
-  }
-});
+import { BasicInfo } from './BasicInfo';
+import { Resume } from './Resume';
+import { Talks } from './Talks';
+import { Talk } from './Talk';
+import { Links } from './Links';
 
 export const SpeakerProfile = React.createClass({
   getInitialState() {
@@ -202,7 +103,7 @@ export const SpeakerProfile = React.createClass({
             <i className="material-icons left">contacts</i>Save
           </button>
           <a className="waves-effect waves-light btn right-align red" data-target="deleteAccountModal" style={{ marginLeft: 5 }} href="#deleteAccountModal">
-            <i className="material-icons left">delete</i>Delete account
+            <i className="material-icons left">delete</i>Delete my account
           </a>
           <div id="deleteAccountModal" className="modal">
             <div className="modal-content">
