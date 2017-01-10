@@ -12,8 +12,11 @@
                 </a>
                 @talk.name(lang)
             </h3>
+            par <a href="@routes.SpeakersController.profile(speaker.id)">@speaker.name</a>
             <p>@Html(markdownToHtml(talk.`abstract`(lang)))</p>
-            <h4>Sessions</h4>
+            @if(talk.sessions.nonEmpty) {
+              <h4>Sessions</h4>
+            }
             @for(session <- talk.sessions) {
                 <h5>@session.name</h5>
                 @for(date <- session.date) {
