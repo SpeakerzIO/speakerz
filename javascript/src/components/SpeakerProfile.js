@@ -4,7 +4,6 @@ import $ from 'jquery';
 import { BasicInfo } from './BasicInfo';
 import { Resume } from './Resume';
 import { Talks } from './Talks';
-import { Talk } from './Talk';
 import { Links } from './Links';
 
 export const SpeakerProfile = React.createClass({
@@ -89,13 +88,13 @@ export const SpeakerProfile = React.createClass({
             <li>
               <div className="collapsible-header"><i className="material-icons">subject</i>Your Resume</div>
               <div className="collapsible-body collapsible-with-margin">
-                <Resume state={this.state.resume} setState={resume => this.updateForm({ resume })} />
+                <Resume state={this.state.resume} setState={resume => this.updateForm({ ...this.state, resume })} />
               </div>
             </li>
             <li>
               <div className="collapsible-header"><i className="material-icons">settings_voice</i>Your Talks</div>
               <div className="collapsible-body collapsible-with-margin">
-                <Talks state={this.state.talks} setState={talks => this.updateForm({ talks })} />
+                <Talks state={this.state.talks} setState={talks => this.updateForm({ ...this.state, talks })} />
               </div>
             </li>
           </ul>

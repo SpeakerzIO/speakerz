@@ -5,6 +5,7 @@ import old.play.api.libs.db.DB
 import play.api.libs.json.{JsObject, JsValue, Json}
 import utils.Id
 import scala.util.Try
+import play.api.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +40,7 @@ case class Speaker(
   }
 
   def save()(implicit ec: ExecutionContext): Future[Speaker] = {
-    Speaker.findById(this.id).flatMap {
+    Speaker.findById(id).flatMap {
       case Some(_) => Speaker.update(this).map(_ => this)
       case None => Speaker.insert(this).map(_ => this)
     }
@@ -74,7 +75,7 @@ object Speaker {
     Future {
       DB.withConnection { implicit c =>
         SQL("insert into Speakerz (id, document) values ({id}, {document}::json)")
-            .on("id" -> Id.fromEmail(speaker.id), "document" -> Json.stringify(speaker.toJson))
+            .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
             .executeInsert()
         ()
       }
@@ -84,9 +85,13 @@ object Speaker {
   def update(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
     Future {
       DB.withConnection { implicit c =>
+        try {
         SQL("update Speakerz set document = {document}::json where id = {id}")
-          .on("id" -> Id.fromEmail(speaker.id), "document" -> Json.stringify(speaker.toJson))
+          .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
           .executeUpdate()
+        } catch {
+          case e: Exception => Logger.error("Error while updating", e)
+        }
         ()
       }
     }

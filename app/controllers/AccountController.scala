@@ -17,7 +17,7 @@ object AccountController extends Controller with GoodOldPlayframework {
     val id = Id.fromEmail(ctx.user.email)
     Speaker.findById(id).flatMap {
       case Some(speaker) => speaker.delete().map { _ =>
-        // TODO : call auth0 here 
+        // TODO : call auth0 here
         Redirect(routes.SpeakersController.home()).withNewSession
       }
       case None => {
@@ -48,16 +48,13 @@ object AccountController extends Controller with GoodOldPlayframework {
       "email" -> ctx.user.email,
       "id" -> Id.fromEmail(ctx.user.email)
     )
-    Logger.info(Json.prettyPrint(payload))
+    // Logger.info(Json.prettyPrint(payload))
+    // Logger.info(Speaker.format.reads(payload).toString)
     Speaker(payload) match {
-      case Some(speaker) => {
-        speaker.save().map { speaker =>
-          Redirect(routes.AccountController.edit())
-        }
+      case Some(speaker) => speaker.save().map { speaker =>
+        Redirect(routes.AccountController.edit())
       }
-      case None => {
-        Future.successful(BadRequest(views.html.badFormat(ctx.user)))
-      }
+      case None => Future.successful(BadRequest(views.html.badFormat(ctx.user)))
     }
   }
 }
