@@ -15,11 +15,11 @@ export class Resume extends Component {
             <textarea
               id="textarea1"
               className="materialize-textarea"
-              value={state.en}
-              onChange={e => this.props.setState({ ...state, en: e.target.value })}></textarea>
+              value={state[this.props.lang]}
+              onChange={e => this.props.setState({ ...state, [this.props.lang]: e.target.value })}></textarea>
             <label htmlFor="textarea1">Your Resume</label>
           </div>
-          <MarkdownPreview id="resume" markdown={state.en} />
+          <MarkdownPreview id="resume" markdown={state[this.props.lang]} />
         </div>
       </div>
     );

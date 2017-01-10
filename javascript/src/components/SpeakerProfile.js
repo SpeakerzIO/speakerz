@@ -9,6 +9,7 @@ import { Links } from './Links';
 export const SpeakerProfile = React.createClass({
   getInitialState() {
     return {
+      lang: 'en',
       nickname: this.props.speaker.nickname,
       name: this.props.speaker.name || { en: '' },
       resume: this.props.speaker.resume || {
@@ -59,9 +60,23 @@ export const SpeakerProfile = React.createClass({
       }
     });
   },
+  setEnglish(e) {
+    e.preventDefault();
+    this.setState({ lang: 'en' });
+  },
+  setFrench(e) {
+    e.preventDefault();
+    this.setState({ lang: 'fr' });
+  },
   render() {
     return (
       <div className="row">
+        <div className="col s12">
+          <ul className="tabs">
+            <li className="tab col s6"><a onClick={this.setEnglish} className="active" href="#en">English</a></li>
+            <li className="tab col s6"><a onClick={this.setFrench} href="#fr">French</a></li>
+          </ul>
+        </div>
         <form className="col s12">
           <ul className="collapsible" data-collapsible="accordion">
             <li>
@@ -87,13 +102,13 @@ export const SpeakerProfile = React.createClass({
             <li>
               <div className="collapsible-header"><i className="material-icons">subject</i>Your Resume</div>
               <div className="collapsible-body collapsible-with-margin">
-                <Resume state={this.state.resume} setState={resume => this.updateForm({ ...this.state, resume })} />
+                <Resume lang={this.state.lang} state={this.state.resume} setState={resume => this.updateForm({ ...this.state, resume })} />
               </div>
             </li>
             <li>
               <div className="collapsible-header"><i className="material-icons">settings_voice</i>Your Talks</div>
               <div className="collapsible-body collapsible-with-margin">
-                <Talks state={this.state.talks} setState={talks => this.updateForm({ ...this.state, talks })} />
+                <Talks lang={this.state.lang} state={this.state.talks} setState={talks => this.updateForm({ ...this.state, talks })} />
               </div>
             </li>
           </ul>

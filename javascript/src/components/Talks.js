@@ -19,7 +19,7 @@ export class Talks extends Component {
     return (
       <div>
         <ul className="collection">
-          {this.props.state.map(t => <Talk key={t.id} talk={t} setState={this.updateTalk} />)}
+          {this.props.state.map(t => <Talk key={t.id} lang={this.props.lang} talk={t} setState={this.updateTalk} />)}
         </ul>
         <button className="waves-effect waves-light btn right-align btn-small" type="button" onClick={this.addTalk} style={{ marginBottom: 10 }}>
           <i className="material-icons left">add</i>Add talk
