@@ -12,6 +12,7 @@ GET     /auth/callback                   controllers.Auth0Controller.callback(co
 
 
 GET     /edit                            controllers.AccountController.edit
+POST    /edit                            controllers.AccountController.save
 GET     /developers                      controllers.SpeakersController.developers
 
 # Map static resources from the /public folder to the /assets URL path

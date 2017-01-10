@@ -2,8 +2,9 @@ package models
 
 import anorm.{SQL, SqlParser}
 import old.play.api.libs.db.DB
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import utils.Id
+import scala.util.Try
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,17 +37,26 @@ case class Speaker(
   def talk(talkId: String): Option[Talk] = {
     talks.find(talk => talk.id == talkId)
   }
+
+  def save()(implicit ec: ExecutionContext): Future[Speaker] = {
+    Speaker.findById(this.id).flatMap {
+      case Some(_) => Speaker.update(this).map(_ => this)
+      case None => Speaker.insert(this).map(_ => this)
+    }
+  }
 }
 
 object Speaker {
 
   implicit val format = Json.format[Speaker]
 
+  def apply(json: JsValue): Option[Speaker] = format.reads(json).asOpt
+
   def findById(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
     Future.successful(
       DB.withConnection { implicit c =>
         SQL("select document::text from Speakerz where id = {id}")
-          .on("id" -> Id.clean(id))
+          .on("id" -> id)
           .as(SqlParser.str("document").singleOpt)
           .map(Json.parse)
           .map(format.reads)
@@ -60,7 +70,7 @@ object Speaker {
     Future {
       DB.withConnection { implicit c =>
         SQL("insert into Speakerz (id, document) values ({id}, {document}::json)")
-            .on("id" -> Id.clean(speaker.id), "document" -> Json.stringify(speaker.toJson))
+            .on("id" -> Id.fromEmail(speaker.id), "document" -> Json.stringify(speaker.toJson))
             .executeInsert()
         ()
       }
@@ -71,29 +81,10 @@ object Speaker {
     Future {
       DB.withConnection { implicit c =>
         SQL("update Speakerz set document = {document}::json where id = {id}")
-          .on("id" -> Id.clean(speaker.id), "document" -> Json.stringify(speaker.toJson))
+          .on("id" -> Id.fromEmail(speaker.id), "document" -> Json.stringify(speaker.toJson))
           .executeUpdate()
         ()
       }
     }
   }
 }
-
-
-// def findByIdFromFiles(id: String)(implicit env: Environment, ec: ExecutionContext, materializer: Materializer): Future[Option[Speaker]] = {
-//   Try(env.getFile(s"conf/speakers/${Id.clean(id)}.json")) match {
-//     case Success(file) if file.exists() => {
-//       val source = StreamConverters.fromInputStream(() => Files.asByteSource(file).openStream())
-//       source.runFold(ByteString.empty)((a, b) => a.concat(b))
-//         .map(_.utf8String)
-//         .map(Json.parse)
-//         .map(_.validate(format).asOpt)
-//     }
-//     case _ => Future.successful(None)
-//   }
-// }
-// lazy val existingIds = {
-//   Environment.getFile("/conf/speakers").listFiles(new FileFilter {
-//     override def accept(pathname: File): Boolean = pathname.getName.endsWith(".json")
-//   }).toSeq.map(f => f.getName.replace(".json", ""))
-// }

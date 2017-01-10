@@ -43,23 +43,31 @@
   });
 
   const Resume = React.createClass({
+    getInitialState() {
+      return {
+        showMarkdown: false
+      }
+    },
     render() {
       const state = this.props.state;
       return (
         <div className="row">
-          <div className="col s6">
+          <div className="col s12">
             <div className="input-field col s12">
               <textarea
                 id="textarea1"
                 className="materialize-textarea"
                 value={state.en}
                 onChange={e => this.props.setState(Object.assign({}, state, { en: e.target.value }))}></textarea>
-              <label htmlFor="textarea1">Textarea</label>
+              <label htmlFor="textarea1">Your Resume</label>
+              <button type="button" className="waves-effect waves-light btn right-align" onClick={() => this.setState(ps => ({ showMarkdown: !ps.showMarkdown }))}>Preview</button>
             </div>
           </div>
-          <div className="col s6">
-            <div dangerouslySetInnerHTML={{ __html: converter.makeHtml(state.en) }} />
-          </div>
+          {this.state.showMarkdown && (
+            <div style={{ position: 'fixed', backgroundColor: 'rgba(255, 255, 255, 0.5)', left: 0, top: 0, width: '100vw', height: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 10000,  }}>
+              <div style={{ width: '50vw', height: '50vh', backgroundColor: 'white', color: 'black', border: '1px solid black' }} dangerouslySetInnerHTML={{ __html: converter.makeHtml(state.en) }} />
+            </div>
+          )}
         </div>
       );
     }
@@ -113,7 +121,21 @@
     },
     submit(e) {
       e.preventDefault();
-      console.log(this.state);
+      console.log('final state is', this.state);
+      $.ajax({
+        method: 'POST',
+        url: '/edit',
+        dataType: 'application/json',
+        contentType: 'application/json',
+        data: JSON.stringify(this.state),
+      }).then(data => {
+        window.location.reload();
+      });
+    },
+    updateForm(state) {
+      const newState = Object.assign({}, state);
+      console.log('new state is', state);
+      this.setState(newState);
     },
     render() {
       return (
@@ -127,7 +149,7 @@
                       nickname: this.state.nickname,
                       name: this.state.name,
                       avatarUrl: this.state.avatarUrl,
-                  }} setState={state => this.setState(Object.assign({}, state))} />
+                  }} setState={this.updateForm} />
                 </div>
               </li>
               <li>
@@ -137,19 +159,19 @@
                       websiteUrl: this.state.websiteUrl,
                       twitterHandle: this.state.twitterHandle,
                       githubHandle: this.state.githubHandle,
-                  }} setState={state => this.setState(Object.assign({}, state))} />
+                  }} setState={this.updateForm} />
                 </div>
               </li>
               <li>
                 <div className="collapsible-header"><i className="material-icons">subject</i>Your Resume</div>
                 <div className="collapsible-body collapsible-with-margin">
-                  <Resume state={this.state.resume} setState={resume => this.setState({ resume })} />
+                  <Resume state={this.state.resume} setState={resume => this.updateForm({ resume })} />
                 </div>
               </li>
               <li>
                 <div className="collapsible-header"><i className="material-icons">settings_voice</i>Your Talks</div>
                 <div className="collapsible-body collapsible-with-margin">
-                  <Talks state={this.state.talks} setState={talks => this.setState({ talks })} />
+                  <Talks state={this.state.talks} setState={talks => this.updateForm({ talks })} />
                 </div>
               </li>
             </ul>

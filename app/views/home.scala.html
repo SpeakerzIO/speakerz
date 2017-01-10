@@ -29,7 +29,7 @@
             <div>
                 <pre>
                     <code class="bash">
-    hash=`echo -n "mail@@you.com" | base64`
+    hash=`echo -n "mail@@you.com" | md5`
     curl http://www.speakerz.io/speakers/$hash
                     </code>
                 </pre>

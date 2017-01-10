@@ -1,16 +1,15 @@
 package utils
 
-import java.util.Base64
+import java.security._
+import java.math._
 
 object Id {
 
+  // echo 'mail@mail.com | sed 's/\+.*@/@/g' | md5'
   def fromEmail(email: String): String = {
-    Base64.getEncoder.encodeToString(email.getBytes("UTF-8"))
+    val s = email.replaceAll("""\+.*@""", "@")
+    val m = MessageDigest.getInstance("MD5")
+    m.update(s.getBytes(), 0, s.length())
+    new BigInteger(1, m.digest()).toString(16);
   }
-
-  def clean(id: String): String = {
-    val email: String = new String(Base64.getDecoder.decode(id.getBytes("UTF-8")), "UTF-8")
-    fromEmail(email.replaceAll("""\+.*@""", "@"))
-  }
-
 }
