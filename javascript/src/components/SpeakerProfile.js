@@ -42,8 +42,7 @@ export const SpeakerProfile = React.createClass({
     });
   },
   updateForm(state) {
-    const newState = Object.assign({}, state);
-    console.log('new state is', state);
+    const newState = { ...state };
     this.setState(newState);
   },
   deleteAccount(e) {

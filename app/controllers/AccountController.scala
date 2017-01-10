@@ -5,7 +5,7 @@ import old.play.GoodOldPlayframework
 import play.api.mvc.Controller
 import utils.{Id, UserAction}
 import scala.concurrent.Future
-import play.api.libs.json.{Json, JsObject}
+import play.api.libs.json._
 
 import play.api.Logger
 
@@ -48,13 +48,18 @@ object AccountController extends Controller with GoodOldPlayframework {
       "email" -> ctx.user.email,
       "id" -> Id.fromEmail(ctx.user.email)
     )
-    // Logger.info(Json.prettyPrint(payload))
-    // Logger.info(Speaker.format.reads(payload).toString)
-    Speaker(payload) match {
-      case Some(speaker) => speaker.save().map { speaker =>
+    Speaker.format.reads(payload) match {
+      case JsError(e) => {
+        Logger.error(s"Error while reading payload $e");
+        Future.successful(BadRequest(Json.obj(
+          "error" -> e.map { t =>
+            Json.obj("path" -> t._1.toString, "errors" -> JsArray(t._2.map(e => JsString(e.message))))
+          }
+        )))
+      }
+      case JsSuccess(speaker, _) => speaker.save().map { speaker =>
         Redirect(routes.AccountController.edit())
       }
-      case None => Future.successful(BadRequest(views.html.badFormat(ctx.user)))
     }
   }
 }
