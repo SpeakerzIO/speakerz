@@ -11,17 +11,17 @@
                 <div>
                     @Html(markdownToHtml(speaker.resume(lang)))
                 </div>
-                @for(websiteUrl <- speaker.websiteUrl) {
+                @for(websiteUrl <- speaker.websiteUrl.filter(_.trim.nonEmpty)) {
                     <div>
                         <i class="fa fa-globe" aria-hidden="true"></i> <a href="@websiteUrl">@websiteUrl</a>
                     </div>
                 }
-                @for(twitterHandle <- speaker.twitterHandle) {
+                @for(twitterHandle <- speaker.twitterHandle.filter(_.trim.nonEmpty)) {
                     <div>
                         <i class="fa fa-twitter" aria-hidden="true"></i> <a href="https://twitter.com/@twitterHandle">@twitterHandle</a>
                     </div>
                 }
-                @for(githubHandle <- speaker.githubHandle) {
+                @for(githubHandle <- speaker.githubHandle.filter(_.trim.nonEmpty)) {
                     <div>
                         <i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/@githubHandle">@githubHandle</a>
                     </div>
@@ -40,7 +40,9 @@
                 @talk.name(lang)
             </h3>
             <p>@Html(markdownToHtml(talk.`abstract`(lang)))</p>
-            <h4>Sessions</h4>
+            @if(talk.sessions.nonEmpty) {
+              <h4>Sessions</h4>
+            }
             @for(session <- talk.sessions) {
                 <h5>@session.name</h5>
                 @for(date <- session.date) {
@@ -61,7 +63,6 @@
                             </div>
                         }
                     }
-
                 }
                 <ul>
                 @for(link <- session.links) {
