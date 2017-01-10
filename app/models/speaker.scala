@@ -85,6 +85,7 @@ object Speaker {
   def update(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
     Future {
       DB.withConnection { implicit c =>
+        Logger.info(s"Update speaker $speaker")
         SQL("update Speakerz set document = {document}::json where id = {id}")
           .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
           .executeUpdate()
