@@ -48,9 +48,9 @@ object AccountController extends Controller with GoodOldPlayframework {
       "email" -> ctx.user.email,
       "id" -> Id.fromEmail(ctx.user.email)
     )
-    Speaker.format.reads(payload) match {
+    Speaker(payload) match {
       case JsError(e) => {
-        Logger.error(s"Error while reading payload $e");
+        Logger.debug(s"Error while reading payload $e");
         Future.successful(BadRequest(Json.obj(
           "error" -> e.map { t =>
             Json.obj("path" -> t._1.toString, "errors" -> JsArray(t._2.map(e => JsString(e.message))))

@@ -10,15 +10,15 @@ export const SpeakerProfile = React.createClass({
   getInitialState() {
     return {
       nickname: this.props.speaker.nickname || '',
-      name: this.props.speaker.name || '',
+      name: this.props.speaker.name || { en: '' },
       resume: this.props.speaker.resume || {
         en: ''
       },
-      avatarUrl: this.props.speaker.avatarUrl || `https://www.gravatar.com/avatar/${encodeURIComponent(this.props.speaker.id)}?s=50&r=pg&d=retro`,
+      avatarUrl: this.props.speaker.avatarUrl || `https://www.gravatar.com/avatar/${encodeURIComponent(this.props.speaker.id)}?s=200&r=pg&d=retro`,
       websiteUrl: this.props.speaker.websiteUrl || '',
       twitterHandle: this.props.speaker.twitterHandle || '',
       githubHandle: this.props.speaker.githubHandle || '',
-      talks: []
+      talks: this.props.speaker.talks || []
     };
   },
   componentDidMount() {

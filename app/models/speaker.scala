@@ -2,7 +2,7 @@ package models
 
 import anorm.{SQL, SqlParser}
 import old.play.api.libs.db.DB
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json._
 import utils.Id
 import scala.util.Try
 import play.api.Logger
@@ -10,16 +10,16 @@ import play.api.Logger
 import scala.concurrent.{ExecutionContext, Future}
 
 case class Speaker(
-                    id: String,
-                    nickname: Option[String],
-                    name: Option[String],
-                    resume: Option[JsObject],
-                    avatarUrl: Option[String],
-                    websiteUrl: Option[String],
-                    twitterHandle: Option[String],
-                    githubHandle: Option[String],
-                    talks: Seq[Talk]
-                  ) {
+  id: String,
+  nickname: Option[String],
+  name: Option[String],
+  resume: Option[JsObject],
+  avatarUrl: Option[String],
+  websiteUrl: Option[String],
+  twitterHandle: Option[String],
+  githubHandle: Option[String],
+  talks: Seq[Talk]
+) {
 
   def toJson = Speaker.format.writes(this)
 
@@ -40,9 +40,14 @@ case class Speaker(
   }
 
   def save()(implicit ec: ExecutionContext): Future[Speaker] = {
+    Logger.debug(s"Saving speaker $this")
     Speaker.findById(id).flatMap {
-      case Some(_) => Speaker.update(this).map(_ => this)
-      case None => Speaker.insert(this).map(_ => this)
+      case Some(_) =>
+        Logger.debug("Speaker found, updateing")
+        Speaker.update(this).map(_ => this)
+      case None =>
+        Logger.debug("Speaker does not exist")
+        Speaker.insert(this).map(_ => this)
     }
   }
 
@@ -55,7 +60,7 @@ object Speaker {
 
   implicit val format = Json.format[Speaker]
 
-  def apply(json: JsValue): Option[Speaker] = format.reads(json).asOpt
+  def apply(json: JsValue): JsResult[Speaker] = format.reads(json)
 
   def findById(id: String)(implicit ec: ExecutionContext): Future[Option[Speaker]] = {
     Future.successful(
@@ -72,36 +77,42 @@ object Speaker {
   }
 
   def insert(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
-    Future {
+    Future.successful(
       DB.withConnection { implicit c =>
-        SQL("insert into Speakerz (id, document) values ({id}, {document}::json)")
-            .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
-            .executeInsert()
+        Logger.debug(s"Insert speaker $speaker")
+        SQL("insert into Speakerz (id, document) values ({id}::text, {document}::json)")
+          .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+          .executeUpdate()
+        Logger.debug(s"Insertion done")
         ()
       }
-    }
+    )
   }
 
   def update(speaker: Speaker)(implicit ec: ExecutionContext): Future[Unit] = {
-    Future {
+    Future.successful(
       DB.withConnection { implicit c =>
-        Logger.info(s"Update speaker $speaker")
+        Logger.debug(s"Update speaker $speaker")
+        val id: String = speaker.id
         SQL("update Speakerz set document = {document}::json where id = {id}")
-          .on("id" -> speaker.id, "document" -> Json.stringify(speaker.toJson))
+          .on("id" -> id, "document" -> Json.stringify(speaker.toJson))
           .executeUpdate()
+        Logger.debug("Update done")
         ()
       }
-    }
+    )
   }
 
   def delete(id: String)(implicit ec: ExecutionContext): Future[Unit] = {
-    Future {
+    Future.successful(
       DB.withConnection { implicit c =>
+        Logger.debug(s"Update speaker $id")
         SQL("delete from Speakerz where id = {id}")
           .on("id" -> id)
           .executeUpdate()
+        Logger.debug("Delete done")
         ()
       }
-    }
+    )
   }
 }
