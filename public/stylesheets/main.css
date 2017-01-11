@@ -27,6 +27,18 @@ h3:hover a.anchor {
     margin: 10px;
 }
 
+/* Logo */
 #logo-container img {
     vertical-align: middle;
+}
+
+/* Titles font size */
+@media only screen and (max-width:600px){
+    h1 {
+        font-size: 2.92rem;
+    }
+
+    h2 {
+        font-size: 2.28rem;
+    }
 }
