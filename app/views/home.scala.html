@@ -6,7 +6,7 @@
 
 @main("Speakerz", user = user, scripts = customScripts) {
 <div class="container">
-    <h1 class="indigo-text center-align">Speaker's profile with an API</h1>
+    <h1 class="center-align">Speaker's profile with an API</h1>
     <div class="row">
         <div class="col s12 m12 l6">
             <h2 class="center-align">Manage your profile</h2>
@@ -16,10 +16,10 @@
             <div class="center-align">
             @user match {
                 case Some(u) => {
-                    <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light amber">Edit your profile</a>
+                    <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light">Edit your profile</a>
                 }
                 case None => {
-                    <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light amber">Create your profile</a>
+                    <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light">Create your profile</a>
                 }
             }
             </div>
@@ -35,7 +35,7 @@
                 </pre>
             </div>
             <div class="center-align">
-                <a href="@routes.SpeakersController.developers" class="btn-large waves-effect waves-light amber">Browse documentation</a>
+                <a href="@routes.SpeakersController.developers" class="btn-large waves-effect waves-light">Browse documentation</a>
             </div>
         </div>
     </div>
