@@ -26,3 +26,7 @@ h3:hover a.anchor {
 .collapsible-with-margin {
     margin: 10px;
 }
+
+#logo-container img {
+    vertical-align: middle;
+}
