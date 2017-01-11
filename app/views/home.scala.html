@@ -1,43 +1,25 @@
 @(user: Option[User])
 
-@customScripts = {
-    <script>hljs.initHighlightingOnLoad();</script>
+@customStyles = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/home.css")">
 }
 
-@main("Speakerz", user = user, scripts = customScripts) {
+@main("Speakerz", user = user, styles = customStyles) {
 <div class="container">
-    <h1 class="center-align">Speaker's profile with an API</h1>
-    <div class="row">
-        <div class="col s12 m12 l6">
-            <h2 class="center-align">Manage your profile</h2>
-            <p class="flow-text center-align">
-                Write your profile once, use it everywhere!
-            </p>
-            <div class="center-align">
-            @user match {
-                case Some(u) => {
-                    <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light">Edit your profile</a>
-                }
-                case None => {
-                    <a href="@routes.Auth0Controller.login(None)" class="btn-large waves-effect waves-light">Create your profile</a>
-                }
-            }
-            </div>
-        </div>
-        <div class="col s12 m12 l6">
-            <h2 class="center-align">Share your profile</h2>
-            <div>
-                <pre>
-                    <code class="bash">
-    hash=`echo -n "mail@@you.com" | md5`
-    curl http://www.speakerz.io/speakers/$hash
-                    </code>
-                </pre>
-            </div>
-            <div class="center-align">
-                <a href="@routes.SpeakersController.developers" class="btn-large waves-effect waves-light">Browse documentation</a>
-            </div>
-        </div>
+    <h1 class="white-text center-align">Speaker's profile with an API</h1>
+
+    <h2 class="white-text light center-align">Write your profile once.<br/>Use it everywhere!</h2>
+
+    <div class="center-align">
+    @user match {
+        case Some(u) => {
+            <a href="@routes.AccountController.edit()" class="btn-large waves-effect waves-light">Edit your profile</a>
+        }
+        case None => {
+            <a href="@routes.Auth0Controller.login(redirect = Some("/edit"))" class="btn-large waves-effect waves-light">Create your profile</a>
+        }
+    }
     </div>
+
 </div>
 }

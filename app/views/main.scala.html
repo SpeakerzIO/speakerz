@@ -30,34 +30,23 @@
                     <a id="logo-container" href="/" class="brand-logo">speakerz.io</a>
                     <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
+                        <li><a href="@routes.SpeakersController.developers()"><i class="material-icons left">assignment</i>Documentation</a></li>
                         @for(u <- user) {
                             <li><a href="@routes.AccountController.edit()"><i class="material-icons left">perm_identity</i> @u.email</a></li>
-                            <li><a href="@routes.SpeakersController.developers()"><i class="material-icons left">assignment</i>Doc</a></li>
                             <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
                         }
                         @if(user.isEmpty) {
-                            <li><a href="@routes.Auth0Controller.login(redirect = Some("/"))">Login</a></li>
+                            <li><a href="@routes.Auth0Controller.login(redirect = Some("/edit"))">Login</a></li>
                         }
                     </ul>
                     <ul id="nav-mobile" class="side-nav">
+                        <li><a href="@routes.SpeakersController.developers()"><i class="material-icons left">assignment</i>Documentation</a></li>
                         @for(u <- user) {
-                            <li>
-                                <a href="@routes.AccountController.edit()">
-                                    @u.email
-                                </a>
-                            </li>
-                            <li>
-                                <a href="@routes.Auth0Controller.logout()">
-                                    Logout
-                                </a>
-                            </li>
+                            <li><a href="@routes.AccountController.edit()"><i class="material-icons left">perm_identity</i> @u.email</a></li>
+                            <li><a href="@routes.Auth0Controller.logout()">Logout</a></li>
                         }
                         @if(user.isEmpty) {
-                            <li>
-                                <a href="@routes.Auth0Controller.login(redirect = Some("/"))">
-                                    Login
-                                </a>
-                            </li>
+                            <li><a href="@routes.Auth0Controller.login(redirect = Some("/edit"))">Login</a></li>
                         }
                     </ul>
                 </div>

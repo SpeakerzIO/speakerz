@@ -1,5 +1,19 @@
 @(user: Option[User])
 
-@main("Developers", user) {
+@customScripts = {
+    <script>hljs.initHighlightingOnLoad();</script>
+}
+
+@main("Developers", user = user, scripts = customScripts) {
     <h1>Developers</h1>
+
+    <h2>Share your profile</h2>
+    <div>
+        <pre>
+            <code class="bash">
+                hash=`echo -n "mail@@you.com" | md5`
+                curl http://www.speakerz.io/speakers/$hash
+            </code>
+        </pre>
+    </div>
 }
